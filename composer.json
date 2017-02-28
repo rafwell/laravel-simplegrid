@@ -1,0 +1,18 @@
+{
+    "name": "rafwell/laravel-easygrid",
+    "description": "A simple component for generating powerful grids with Laravel.",
+    "authors": [{
+        "name": "Rafael Souza",
+        "email": "rafaotec@gmail.com"
+    }],    
+    "require": {
+        "maatwebsite/excel": "~2.1.0"
+    },
+    "minimum-stability": "dev",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Rafwell\\Easygrid\\": "src/"
+        }
+    }
+}

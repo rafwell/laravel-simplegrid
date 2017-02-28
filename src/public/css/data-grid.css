@@ -1,0 +1,199 @@
+.grid-container{
+	margin-bottom: 10px;
+}
+.grid-container .pesquisa{
+	margin-bottom: 15px;
+	display: inline-block;
+	width: 100%;
+}
+.grid-container .pesquisa form{
+	width: auto;	
+	position:relative;
+	float: left;
+}
+
+.grid-container .pesquisa .total-info{
+	height: 34px;
+	line-height: 34px;
+	display: inline-block;
+	vertical-align: middle;
+	float: left;
+}
+
+.grid-container .pesquisa .input-pesquisar{
+	width: 250px;
+	padding-right: 35px;
+	float: left;
+	margin-right: 5px;
+}
+.grid-container .pesquisa .bt-pesquisar{
+	position: absolute;
+	top: 0;
+	left: 210px;	
+	margin-right: 5px;
+}
+.grid-container .pesquisa .bt-limpar-pesquisa{
+	float: left;
+	margin-right: 5px;
+}
+
+.grid-container .pesquisa .bt-pesquisa-avancada{
+	float: left;
+	margin-right: 5px;
+}
+
+.grid-container .nav-pagination{
+	width: 221px;
+	float: right;
+}
+
+.grid-container .pesquisa-avancada .input-group-addon,
+.grid-container .pesquisa-avancada .datetimepicker{
+	font-size: 12px;
+	color: #707478;
+}
+.grid-container .pesquisa-avancada .campos{	
+    margin-left: -2.5px;
+    margin-bottom: 15px;
+}
+.grid-container .pesquisa-avancada .campos:after{
+	content: ' ';
+	display: table;
+	width: 100%;	
+}
+.grid-container .pesquisa-avancada .campo{
+	float: left;
+	padding-left: 5px;	
+	width: 25%;
+	height: 60px;
+	margin-bottom: 10px;
+}
+.grid-container .pesquisa-avancada .campo.duplo{	
+	width: 50%;
+}
+
+.grid-container .pesquisa-avancada .campo.duplo .de,
+.grid-container .pesquisa-avancada .campo.duplo .ate{
+	width: 50%;	
+	float: left;	
+	position: relative;
+}
+
+.grid-container .pesquisa-avancada .campo.duplo .ate{
+	padding-left: 5px;
+}
+
+.grid-container .pesquisa-avancada .campo.duplo .de .datetimepicker input,
+.grid-container .pesquisa-avancada .campo.duplo .ate .datetimepicker input{
+	padding-left: 45px;
+}
+.grid-container .pesquisa-avancada .campo.duplo .de .input.datetimepicker:before{
+	content: 'de:';
+    background-color: #eee;
+    position: absolute;
+    z-index: 4;
+    padding: 7px 8px 8px 8px;
+    border-radius: 4px 0px 0px 4px;
+    vertical-align: middle;
+    top: 1px;
+    left: 1px;
+    width: 37px;
+    height: 32px;
+    border-right: 1px solid #ccc;
+}
+
+.grid-container .pesquisa-avancada .campo.duplo .ate .input.datetimepicker:before{
+	content: 'até:';
+	background-color: #eee;
+	position: absolute;
+	z-index: 4;
+	padding: 7px 8px 8px 8px;
+	border-radius: 4px 0px 0px 4px;
+	vertical-align: middle;
+	top: 1px;
+	left: 1px;
+	width: 37px;
+	height: 32px;
+	border-right: 1px solid #ccc;
+}
+
+.grid-container .pesquisa-avancada form{
+	width: 100%;
+}
+.grid-container .pesquisa-avancada .remover{
+	opacity: 0;
+}
+.grid-container .pesquisa-avancada .pesquisado .remover{
+	opacity: 1;
+	cursor: pointer;
+}
+.grid-container .pesquisa-avancada form .input-group.money,
+.grid-container .pesquisa-avancada form .input-group.integer,
+.grid-container .pesquisa-avancada form .input-group.numeric{
+	margin-bottom: 10px;
+}
+
+.grid-container table .acao{
+	float: left;
+	margin: 0px 3px 3px 0px;
+}
+
+.grid-container table .nenhum-registro-encontrado{
+	text-align: center;
+}
+
+.grid-container table thead tr th .setas{
+	vertical-align: middle;
+	margin-left: 0px;
+	padding-top: 3px;
+	float: left;
+	margin-right: 4px;
+}
+
+.grid-container .acoes-em-massa select{
+	width: auto;
+	margin: 0px 10px 10px 0px;
+}
+.grid-container table thead tr th .seta-cima:before {
+	content: "";
+	display: inline-block;
+	vertical-align: middle;	
+	width: 0; 
+	height: 0; 
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-bottom: 4px solid #000;
+	width: auto;
+	float: left;
+}
+
+.grid-container table thead tr th .seta-baixo:before {
+	content: "";
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 0px;
+	width: 0;
+	height: 0;
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-top: 4px solid #000;
+	float: left;
+	margin-left: -8px;
+	margin-top: 6px;
+}
+.grid-container .exibindo-registros-info{
+	margin-bottom: 10px;
+}
+.grid-container .exibindo-registros-info select{
+	border: 1px solid #cecece;
+	background-color: #fff;
+	border-radius: 4px;
+}
+
+.grid-container .bt-exportar{
+	text-decoration: none;	
+}
+
+.grid-container .pesquisa.pesquisa-simples{
+	width: auto;
+}
