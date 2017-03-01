@@ -7,7 +7,7 @@
 ##Instalation
 1. Add the dependency to your composer.json ```composer require "rafwell/laravel-simplegrid"``` or ```"rafwell/laravel-simplegrid": "~0.0"```.
 2. Execute ```composer update```.
-3. Add to you ```app/config/app.php``` our service provider:
+3. Add to your ```config/app.php``` our service provider:
 ```@php
 Rafwell\Simplegrid\SimplegridServiceProvider::class
 ```
@@ -15,7 +15,7 @@ Rafwell\Simplegrid\SimplegridServiceProvider::class
 5. Include in your html the js and css dependencies.
 
 ###Dependencies
-This package will writen to work with bootstrap 3 and Jquery. We need the following dependencies:
+This package was written to work with bootstrap 3 and Jquery. We need  the following dependencies:
 
 * [Datetimepicker](https://eonasdan.github.io/bootstrap-datetimepicker/), for advanced search in date and datetime fields.
 * [Moment](https://github.com/moment/moment), for Datetimepicker work.
@@ -108,16 +108,16 @@ $Grid->bulkAction('Delete selected itens', '/test/bulk-delete');
 ```
 The result will be like this:
 ![Complex grid](https://image.ibb.co/jyi4aa/Captura_de_tela_de_2017_03_01_15_12_05.png)
-The advanced search allow you search field by field. The renderer is like this:
+The advanced search allow you search field by field. The rendered is like this:
 ![Complex grid advanced search](https://image.ibb.co/mvESva/Captura_de_tela_de_2017_03_01_15_14_03.png)
 
 
 ##Language
-This package is multi-language. We use the location of you laravel instalattion, configured in your ```config/app.php```. If we have the translation their will be automatically loaded. 
+This package is multi-language. We use the location of you laravel instalattion, configured in your ```config/app.php```. If we have the translation this will be automatically loaded. 
 You can see the currently supported languages in our [lang folder](resources/lang).
 
 ##Disclaimer
-This repository is new, 'forked' from [rafwell/laravel-grid](https://github.com/rafwell/laravel-grid). The original repository does not contemple multi-language features. Him will'be descontinued when this is ready for production applications.
+This repository is new, 'forked' from [rafwell/laravel-grid](https://github.com/rafwell/laravel-grid). The original repository does not contemple multi-language features. It has been discontinued in favor of this.
 
 ##Contribute
 If you want contribute, you can open issues to discussion.
