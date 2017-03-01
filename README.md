@@ -108,6 +108,8 @@ $Grid->bulkAction('Delete selected itens', '/test/bulk-delete');
 ```
 The result will be like this:
 ![Complex grid](https://image.ibb.co/jyi4aa/Captura_de_tela_de_2017_03_01_15_12_05.png)
+The advanced search allow you search field by field. The renderer is like this:
+![Complex grid advanced search](https://image.ibb.co/mvESva/Captura_de_tela_de_2017_03_01_15_14_03.png)
 
 ##Disclaimer
 This repository is new, 'forked' from [rafwell/laravel-grid](https://github.com/rafwell/laravel-grid). The original repository does not contemple multi-language features. Him will'be descontinued when this is ready for production applications.
