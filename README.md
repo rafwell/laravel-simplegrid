@@ -111,6 +111,11 @@ The result will be like this:
 The advanced search allow you search field by field. The renderer is like this:
 ![Complex grid advanced search](https://image.ibb.co/mvESva/Captura_de_tela_de_2017_03_01_15_14_03.png)
 
+
+##Language
+This package is multi-language. We use the location of you laravel instalattion, configured in your ```config/app.php```. If we have the translation their will be automatically loaded. 
+You can see the currently supported languages in our [lang folder](resources/lang).
+
 ##Disclaimer
 This repository is new, 'forked' from [rafwell/laravel-grid](https://github.com/rafwell/laravel-grid). The original repository does not contemple multi-language features. Him will'be descontinued when this is ready for production applications.
 
