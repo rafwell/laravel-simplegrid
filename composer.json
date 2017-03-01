@@ -1,5 +1,5 @@
 {
-    "name": "rafwell/laravel-easygrid",
+    "name": "rafwell/laravel-simplegrid",
     "description": "A simple component for generating powerful grids with Laravel.",
     "authors": [{
         "name": "Rafael Souza",
@@ -12,7 +12,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Rafwell\\Easygrid\\": "src/"
+            "Rafwell\\Simplegrid\\": "src/"
         }
     }
 }

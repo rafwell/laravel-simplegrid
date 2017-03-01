@@ -1,10 +1,10 @@
 <?php
 
-namespace Rafwell\Easygrid;
+namespace Rafwell\Simplegrid;
 
 use Illuminate\Support\ServiceProvider;
 
-class EasygridServiceProvider extends ServiceProvider
+class SimplegridServiceProvider extends ServiceProvider
 {    
     
     /**
@@ -14,12 +14,12 @@ class EasygridServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'Easygrid');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'Simplegrid');
 
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'Easygrid');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'Simplegrid');
 
         $this->publishes([
-            __DIR__.'/../public' => public_path('vendor/rafwell/easy-grid'),
+            __DIR__.'/../public' => public_path('vendor/rafwell/simple-grid'),
         ]);
     }
 

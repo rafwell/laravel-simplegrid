@@ -1,5 +1,5 @@
 <?php
-namespace Rafwell\Easygrid;
+namespace Rafwell\Simplegrid;
 use Rafwell\Grid\GridController;
 use Illuminate\Http\Request;
 use DB;
@@ -315,7 +315,7 @@ class Grid{
 			$selectCampos[$i] = DB::raw($selectCampos[$i]);
 		}		
 			
-		//Cria a subquery
+		//make a subquery
 		$bindings = $this->query->getBindings();
 		$subQuery = clone($this->query);
 		$subQuery = $subQuery->select($selectCampos);
@@ -323,12 +323,12 @@ class Grid{
 		$this->query = $this->query->getModel()->newQuery();
 
 		if($this->Request->grid==$this->id){
-			//Paginação
+			//pagination
 			$this->currentPage = $this->Request->page ? $this->Request->page : 1;
 			
 			if(isset($this->Request->search)){
 				if(is_string($this->Request->search)){
-					//busca simples
+					//simple search
 					$this->searchedValue = htmlentities($this->Request->search);
 				
 					$whereBusca = '';
@@ -354,7 +354,7 @@ class Grid{
 						switch ($this->driverName) {
 							case 'odbc':
 							case 'sqlsrv':
-								//sqlserver < 2012 não tem a função concat
+								//sqlserver < 2012 not have a concat function
 								$whereBusca = substr($whereBusca, 1);
 							break;
 							default:
@@ -365,7 +365,7 @@ class Grid{
 
 					}
 				}else{
-					//where busca avançada
+					//make where advanced search
 					for($i=0;$i<count($this->Request->search);$i++){						
 
 						foreach($this->Request->search[$i] as $field=>$value){							
@@ -435,7 +435,7 @@ class Grid{
 				}
 			}			
 
-			//Busca avançada
+			//advanced search
 			if($this->Request['advanced-search']) $this->advancedSearchOpened = true;
 		}		
 
@@ -445,7 +445,7 @@ class Grid{
 				$deleted_at = mb_substr($subQuery->toSql(), $positionDeletedAt);
 				
 				if(mb_strpos($deleted_at, ' ')!==false){
-					//Algumas queries tem group by
+					//someone queries have group by
 					$deleted_at = mb_substr($deleted_at, 0, mb_strpos($deleted_at, 'null')+4);				
 				}				
 
@@ -470,7 +470,7 @@ class Grid{
 
 		$this->query->setBindings($bindings);		
 		
-		//Antes de paginar, contar as rows		
+		//before paginate, count total rows	
 		
 		$this->totalRows = $this->query->count();
 		
@@ -483,7 +483,7 @@ class Grid{
 		if($this->currentPage>$this->totalPages)
 			$this->currentPage = $this->totalPages;		
 		
-		//ordenação		
+		//make ordernation		
 
 		if(isset($this->Request->order) && isset($this->Request->direction)){
 			if($strrpos = strrpos($this->Request->order, '.'))
@@ -500,7 +500,7 @@ class Grid{
 		if(!$this->export || ($this->export && ($this->Request->get('export')!='xls' && $this->Request->get('export')!='csv')))
 			$this->query->skip(($this->currentPage-1)*$this->currentRowsPerPage)->take($this->currentRowsPerPage);		
 
-		//executar query
+		//execute builded query
 		
 		$rows = $this->query->get()->toArray();
 
@@ -528,12 +528,12 @@ class Grid{
 		}
 	    $nrLines = count($rows);
 
-	    //parser das ações
+	    //translate actions
 	    if(isset($this->actions)){
 	      for($i = 0; $i<$nrLines; $i++){
 	        foreach($this->actions as $action){
 	          if(strpos($action['url'], '{')!==false){
-	            //Existe variável para substituir na url
+	            //Have variable to translate
 	            foreach($rows[$i] as $field=>$value){   
 	              if($field<>'gridActions' && (is_string($value) || is_numeric($value)))
 	                $action['url'] = str_replace('{'.$field.'}', $value, $action['url']);
@@ -550,8 +550,9 @@ class Grid{
 	    	}
 	    }	    
 
-	    //renderiza o grid
-	    $this->view = View::make('Easygrid::grid', [
+	    //make
+	    
+	    $this->view = View::make('Simplegrid::grid', [
 	      'rows'=>$rows,
 	      'totalRows'=>$this->totalRows,
 	      'fields'=>$this->fields,
