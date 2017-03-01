@@ -26,18 +26,18 @@ Properly we added to our package those dependencies. You can add this from your 
 ```@html
 <!-- ONLY INCLUDE IF YOU NOT HAVE THOSE DEPENDENCIES -->
 <script src="vendor/rafwell/simplegrid/moment/moment.js"></script>
-<script type="text/javascript" src="vendor/rafwell/simplegrid/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="vendor/rafwell/simple-grid/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 
 <!-- JS LARAVELSIMPLEGRID -->
-<script src="vendor/rafwell/simplegrid/js/simplegrid.js"></script>
+<script src="vendor/rafwell/simple-grid/js/simplegrid.js"></script>
 ```
 ####CSS Files
 ```
-<!-- S ONLY INCLUDE IF YOU NOT HAVE THOSE DEPENDENCIES -->
-<link rel="stylesheet" href="vendor/rafwell/simplegrid/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+<!-- ONLY INCLUDE IF YOU NOT HAVE THOSE DEPENDENCIES -->
+<link rel="stylesheet" href="vendor/rafwell/simple-grid/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 
-<!-- CSS LARAVEL-GRID -->
-<link rel="stylesheet" href="vendor/rafwell/simplegrid/css/simplegrid.css">
+<!-- CSS LARAVEL-SIMPLEGRID -->
+<link rel="stylesheet" href="vendor/rafwell/simple-grid/css/simplegrid.css">
 ```
 
 ##An simple example
