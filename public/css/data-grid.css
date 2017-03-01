@@ -87,35 +87,6 @@
 .grid-container .pesquisa-avancada .campo.duplo .ate .datetimepicker input{
 	padding-left: 45px;
 }
-.grid-container .pesquisa-avancada .campo.duplo .de .input.datetimepicker:before{
-	content: 'de:';
-    background-color: #eee;
-    position: absolute;
-    z-index: 4;
-    padding: 7px 8px 8px 8px;
-    border-radius: 4px 0px 0px 4px;
-    vertical-align: middle;
-    top: 1px;
-    left: 1px;
-    width: 37px;
-    height: 32px;
-    border-right: 1px solid #ccc;
-}
-
-.grid-container .pesquisa-avancada .campo.duplo .ate .input.datetimepicker:before{
-	content: 'até:';
-	background-color: #eee;
-	position: absolute;
-	z-index: 4;
-	padding: 7px 8px 8px 8px;
-	border-radius: 4px 0px 0px 4px;
-	vertical-align: middle;
-	top: 1px;
-	left: 1px;
-	width: 37px;
-	height: 32px;
-	border-right: 1px solid #ccc;
-}
 
 .grid-container .pesquisa-avancada form{
 	width: 100%;

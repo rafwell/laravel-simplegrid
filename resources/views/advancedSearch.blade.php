@@ -29,6 +29,7 @@ foreach($fields as $field=>$opts){
 				<div class="from {!!isset($searchedValue[$field.'_from']) && $searchedValue[$field.'_from']!=='' ? 'searched' : ''!!}">
 					<label>{!!$opts['label']!!} <span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
 					<div class="input input-group {!!$opts['type']!!} datetimepicker">
+						<span class="input-group-addon">@lang('to:')</span>
 						<input type="text" name="search[][{!!$field!!}][from]" class="form-control" value="{{isset($searchedValue[$field.'_from']) ? $searchedValue[$field.'_from'] : ''}}">
 						<span class="input-group-addon">
 	                        <span class="glyphicon glyphicon-calendar"></span>
@@ -38,6 +39,7 @@ foreach($fields as $field=>$opts){
 				<div class="to {!!isset($searchedValue[$field.'_to']) && $searchedValue[$field.'_to']!=='' ? 'searched' : ''!!}">
 					<label><span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
 					<div class="input input-group {!!$opts['type']!!} datetimepicker">
+						<span class="input-group-addon">@lang('from:')</span>
 						<input type="text" name="search[][{!!$field!!}][to]" class="form-control" value="{{isset($searchedValue[$field.'_to']) ? $searchedValue[$field.'_to'] : ''}}">
 						<span class="input-group-addon">
 	                        <span class="glyphicon glyphicon-calendar"></span>
@@ -52,14 +54,14 @@ foreach($fields as $field=>$opts){
 				<div class="from {!!isset($searchedValue[$field.'_from']) && $searchedValue[$field.'_from']!=='' ? 'searched' : ''!!}">
 					<label>{!!$opts['label']!!} <span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
 					<div class="input input-group money">
-						<span class="input-group-addon">de:</span>
+						<span class="input-group-addon">@lang('from:')</span>
 						<input type="text" name="search[][{!!$field!!}][from]" class="form-control" value="{{isset($searchedValue[$field.'_from']) ? $searchedValue[$field.'_from'] : ''}}">
 					</div>			
 				</div>				
 				<div class="to {!!isset($searchedValue[$field.'_to']) && $searchedValue[$field.'_to']!=='' ? 'searched' : ''!!}">
 					<label><span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
 					<div class="input input-group money">
-						<span class="input-group-addon">até:</span>
+						<span class="input-group-addon">@lang('to:')</span>
 						<input type="text" name="search[][{!!$field!!}][to]" class="form-control" value="{{isset($searchedValue[$field.'_to']) ? $searchedValue[$field.'_to'] : ''}}">
 					</div>			
 				</div>		
@@ -72,14 +74,14 @@ foreach($fields as $field=>$opts){
 				<div class="from {!!isset($searchedValue[$field.'_from']) && $searchedValue[$field.'_from']!=='' ? 'searched' : ''!!}">
 					<label>{!!$opts['label']!!} <span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
 					<div class="input input-group {!!$opts['type']!!}">
-						<span class="input-group-addon">de:</span>
+						<span class="input-group-addon">@lang('from:')</span>
 						<input type="text" name="search[][{!!$field!!}][from]" class="form-control" value="{{isset($searchedValue[$field.'_from']) ? $searchedValue[$field.'_from'] : ''}}">
 					</div>			
 				</div>				
 				<div class="to {!!isset($searchedValue[$field.'_to']) && $searchedValue[$field.'_to']!=='' ? 'searched' : ''!!}">
 					<label><span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
 					<div class="input input-group {!!$opts['type']!!}">
-						<span class="input-group-addon">até:</span>
+						<span class="input-group-addon">@lang('to:')</span>
 						<input type="text" name="search[][{!!$field!!}][to]" class="form-control" value="{{isset($searchedValue[$field.'_to']) ? $searchedValue[$field.'_to'] : ''}}">
 					</div>			
 				</div>		

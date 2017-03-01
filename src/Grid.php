@@ -551,7 +551,7 @@ class Grid{
 	    }	    
 
 	    //renderiza o grid
-	    $this->view = View::make('grid::grid', [
+	    $this->view = View::make('Easygrid::grid', [
 	      'rows'=>$rows,
 	      'totalRows'=>$this->totalRows,
 	      'fields'=>$this->fields,

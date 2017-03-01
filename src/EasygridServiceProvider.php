@@ -14,9 +14,12 @@ class EasygridServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__.'/views', 'grid');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'Easygrid');
+
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'Easygrid');
+
         $this->publishes([
-            __DIR__.'/public' => public_path('vendor/rafwell/easy-grid'),
+            __DIR__.'/../public' => public_path('vendor/rafwell/easy-grid'),
         ]);
     }
 
