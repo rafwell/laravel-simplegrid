@@ -25,7 +25,7 @@ Properly we added to our package those dependencies. You can add this from your 
 
 ```@html
 <!-- ONLY INCLUDE IF YOU NOT HAVE THOSE DEPENDENCIES -->
-<script src="vendor/rafwell/simplegrid/moment/moment.js"></script>
+<script src="vendor/rafwell/simple-grid/moment/moment.js"></script>
 <script type="text/javascript" src="vendor/rafwell/simple-grid/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 
 <!-- JS LARAVELSIMPLEGRID -->
