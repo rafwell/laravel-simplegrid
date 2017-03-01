@@ -4,7 +4,7 @@
 ##Compatibility
 **rafwell/laravel-simplegrid** is compatibly with Laravel 5.2+
 
-##What's new
+##Disclaimer
 This repository is new, 'forked' from [rafwell/laravel-grid](https://github.com/rafwell/laravel-grid). The original repository does not contemple multi-language features. Him will'be descontinued when this is ready for production applications.
 
 ##Contribute
