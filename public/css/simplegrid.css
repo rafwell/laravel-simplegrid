@@ -1,0 +1,171 @@
+.grid-container{
+	margin-bottom: 10px;
+}
+.grid-container .search{
+	margin-bottom: 15px;
+	display: inline-block;
+	width: 100%;
+}
+.grid-container .search form{
+	width: auto;	
+	position:relative;
+	float: left;
+}
+
+.grid-container .search .total-info{
+	height: 34px;
+	line-height: 34px;
+	display: inline-block;
+	vertical-align: middle;
+	float: left;
+}
+
+.grid-container .search .input-search{
+	width: 250px;
+	padding-right: 35px;
+	float: left;
+	margin-right: 5px;
+}
+.grid-container .search .btn-search{
+	position: absolute;
+	top: 0;
+	left: 210px;	
+	margin-right: 5px;
+}
+.grid-container .search .btn-clear-search{
+	float: left;
+	margin-right: 5px;
+}
+
+.grid-container .search .btn-advanced-search{
+	float: left;
+	margin-right: 5px;
+}
+
+.grid-container .nav-pagination{
+	width: 221px;
+	float: right;
+}
+
+.grid-container .advanced-search .input-group-addon,
+.grid-container .advanced-search .datetimepicker{
+	font-size: 12px;
+	color: #707478;
+}
+.grid-container .advanced-search .fields{	
+    margin-left: -2.5px;
+    margin-bottom: 15px;
+}
+.grid-container .advanced-search .fields:after{
+	content: ' ';
+	display: table;
+	width: 100%;	
+}
+.grid-container .advanced-search .field{
+	float: left;
+	padding-left: 5px;	
+	width: 25%;
+	height: 60px;
+	margin-bottom: 10px;
+}
+
+.grid-container .advanced-search .error{
+	
+}
+
+.grid-container .advanced-search .field.double{	
+	width: 50%;
+}
+
+.grid-container .advanced-search .field.double .from,
+.grid-container .advanced-search .field.double .to{
+	width: 50%;	
+	float: left;	
+	position: relative;
+}
+
+.grid-container .advanced-search .field.double .to{
+	padding-left: 5px;
+}
+
+.grid-container .advanced-search form{
+	width: 100%;
+}
+.grid-container .advanced-search .btn-remove{
+	opacity: 0;	
+}
+.grid-container .advanced-search .searched .btn-remove{
+	opacity: 1;
+	cursor: pointer;
+}
+.grid-container .advanced-search form .input-group.money,
+.grid-container .advanced-search form .input-group.integer,
+.grid-container .advanced-search form .input-group.numeric{
+	margin-bottom: 10px;
+}
+
+.grid-container table .action{
+	float: left;
+	margin: 0px 3px 3px 0px;
+}
+
+.grid-container table .no-results-found{
+	text-align: center;
+}
+
+.grid-container table thead tr th .arrows{
+	vertical-align: middle;
+	margin-left: 0px;
+	padding-top: 3px;
+	float: left;
+	margin-right: 4px;
+}
+
+.grid-container .acoes-em-massa select{
+	width: auto;
+	margin: 0px 10px 10px 0px;
+}
+.grid-container table thead tr th .arrow-up:before {
+	content: "";
+	display: inline-block;
+	vertical-align: middle;	
+	width: 0; 
+	height: 0; 
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-bottom: 4px solid #000;
+	width: auto;
+	float: left;
+}
+
+.grid-container table thead tr th .arrow-down:before {
+	content: "";
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 0px;
+	width: 0;
+	height: 0;
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-top: 4px solid #000;
+	float: left;
+	margin-left: -8px;
+	margin-top: 6px;
+}
+.grid-container .showing-rows-info{
+	margin-bottom: 10px;
+}
+.grid-container .showing-rows-info select,
+.grid-container .bulk-action select{
+	border: 1px solid #cecece;
+	background-color: #fff;
+	border-radius: 4px;
+}
+
+.grid-container .btn-export{
+	text-decoration: none;	
+}
+
+.grid-container .search.simple-search{
+	width: auto;
+}

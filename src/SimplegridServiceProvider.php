@@ -19,6 +19,10 @@ class SimplegridServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'Simplegrid');
 
         $this->publishes([
+            __DIR__.'/../config/rafwell-simplegrid.php' => config_path('rafwell-simplegrid.php'),
+        ]);
+
+        $this->publishes([
             __DIR__.'/../public' => public_path('vendor/rafwell/simple-grid'),
         ]);
     }

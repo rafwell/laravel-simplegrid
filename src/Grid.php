@@ -26,7 +26,7 @@ class Grid{
 	public $advancedSearch = false;
 	public $advancedSearchOpened = false;
 	public $advancedSearchFields = [];
-	public $rowsPerPage = [10,20,30,50,100,200];
+	public $rowsPerPage = [];
 	public $currentRowsPerPage = 10;
 	public $processLineClosure;
 	public $export = true;
@@ -34,8 +34,18 @@ class Grid{
 	public $defaultOrder = []; //['field', 'direction']
 	private $driverName = '';
 	private $allowExport = true;
+	private $simpleGridConfig;
 
-	function __construct($query, $id){
+	function __construct($query, $id, $config = []){
+		//merge the configurations
+		$this->simpleGridConfig = include __DIR__.'/../config/rafwell-simplegrid.php';
+		$this->simpleGridConfig = array_merge_recursive($this->simpleGridConfig, config('rafwell-simplegrid'));		
+		$this->simpleGridConfig = array_merge_recursive($this->simpleGridConfig, $config);
+
+		$this->rowsPerPage = $this->simpleGridConfig['rowsPerPage'];
+		$this->currentRowsPerPage = $this->simpleGridConfig['currentRowsPerPage'];
+		$this->allowExport = $this->simpleGridConfig['allowExport'];		
+
 		$this->query = $query;		
 		$this->id = $id;				
 		$this->Request = Request::capture();
@@ -48,8 +58,11 @@ class Grid{
 			if(is_string($v)){
 				$v = [
 					'label'=>$v,
-					'field'=>$k					
+					'field'=>$k
 				];
+			}else{
+				if(!isset($v['label']))
+					$v['label'] = ucwords( str_replace('_', ' ', $k) );
 			}
 			$strrpos = strrpos($k, '.');
 			if($strrpos!==false){
@@ -395,22 +408,23 @@ class Grid{
 								else
 									$valueAux = '';
 
-
 								switch ($this->advancedSearchFields[$field]['type']) {
 									case 'date':
-										//$valueProcessed = Helpers::converteData($valueAux);
-									break;
 									case 'datetime':
-										//$valueProcessed = Helpers::converteDataHora($valueAux);
+										if(!$valueAux) continue;
+
+										$type = $this->advancedSearchFields[$field]['type'];
+										$inputFormat = $this->simpleGridConfig['advancedSearch']['formats'][$type]['input'][1];
+
+										$processFormat = $this->simpleGridConfig['advancedSearch']['formats'][$type]['processTo'][1];
+
+										$valueProcessed = $valueAux;
+										
+										if($inputFormat!=$processFormat)
+											$valueProcessed = Carbon::createFromFormat($inputFormat, $valueAux)->format($processFormat);
 									break;
-									case 'money':
-										//$valueProcessed = Helpers::converteMoedaReaisMoney($valueAux);
-									break;
-									case 'integer':
-										$valueProcessed = (int) $valueAux;
-									break;
-									case 'numeric':
-										$valueProcessed = str_replace(',', '.', $valueAux);
+									case 'decimal':										
+										$valueAux = (int) $valueAux;
 									break;
 								}
 
@@ -474,9 +488,11 @@ class Grid{
 		
 		$this->totalRows = $this->query->count();
 		
-		$this->currentRowsPerPage = (int) $this->Request->get('rows-per-page');
-		if(!$this->currentRowsPerPage)
-			$this->currentRowsPerPage = $this->rowsPerPage[0];
+		if($this->Request->get('rows-per-page')){
+			$getRowsperPage = (int) $this->Request->get('rows-per-page');
+			if(array_search($getRowsperPage, $this->rowsPerPage)!==false)
+				$this->currentRowsPerPage = $getRowsperPage;
+		}
 
 		$this->totalPages = intval(ceil(($this->totalRows/$this->currentRowsPerPage)));
 
@@ -579,7 +595,8 @@ class Grid{
 	      'urlAdvancedSearch'=>$this->getUrl('advanced-search'),
 	      'urlSimpleSearch'=>$this->getUrl('simple-search'),
 	      'urlRowsPerPage'=>$this->getUrl('rows-per-page'),
-	      'urlExport'=>$this->getUrl('url-export')
+	      'urlExport'=>$this->getUrl('url-export'),
+	      'simpleGridConfig'=>$this->simpleGridConfig
 	    ]);
 
 	    return $this->view;

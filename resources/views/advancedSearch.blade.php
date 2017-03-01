@@ -25,11 +25,11 @@ foreach($fields as $field=>$opts){
 		break;
 		case 'date':
 		case 'datetime': ?>
-			<div class="field double {!!$field!!}">				
+			<div class="field double {!!$field!!}" data-format-input="{{$simpleGridConfig['advancedSearch']['formats'][$opts['type']]['input'][0]}}">
 				<div class="from {!!isset($searchedValue[$field.'_from']) && $searchedValue[$field.'_from']!=='' ? 'searched' : ''!!}">
 					<label>{!!$opts['label']!!} <span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
 					<div class="input input-group {!!$opts['type']!!} datetimepicker">
-						<span class="input-group-addon">@lang('to:')</span>
+						<span class="input-group-addon">@lang('from:')</span>
 						<input type="text" name="search[][{!!$field!!}][from]" class="form-control" value="{{isset($searchedValue[$field.'_from']) ? $searchedValue[$field.'_from'] : ''}}">
 						<span class="input-group-addon">
 	                        <span class="glyphicon glyphicon-calendar"></span>
@@ -39,7 +39,7 @@ foreach($fields as $field=>$opts){
 				<div class="to {!!isset($searchedValue[$field.'_to']) && $searchedValue[$field.'_to']!=='' ? 'searched' : ''!!}">
 					<label><span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
 					<div class="input input-group {!!$opts['type']!!} datetimepicker">
-						<span class="input-group-addon">@lang('from:')</span>
+						<span class="input-group-addon">@lang('to:')</span>
 						<input type="text" name="search[][{!!$field!!}][to]" class="form-control" value="{{isset($searchedValue[$field.'_to']) ? $searchedValue[$field.'_to'] : ''}}">
 						<span class="input-group-addon">
 	                        <span class="glyphicon glyphicon-calendar"></span>
@@ -49,40 +49,38 @@ foreach($fields as $field=>$opts){
 			</div>
 		<?php
 		break;
-		case 'money': ?>
-			<div class="field double {!!$field!!}">				
+		case 'integer': ?>
+			<div class="field double {!!$field!!}">
 				<div class="from {!!isset($searchedValue[$field.'_from']) && $searchedValue[$field.'_from']!=='' ? 'searched' : ''!!}">
 					<label>{!!$opts['label']!!} <span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
-					<div class="input input-group money">
+					<div class="input input-group {!!$opts['type']!!}">
 						<span class="input-group-addon">@lang('from:')</span>
-						<input type="text" name="search[][{!!$field!!}][from]" class="form-control" value="{{isset($searchedValue[$field.'_from']) ? $searchedValue[$field.'_from'] : ''}}">
+						<input type="number" step="1" name="search[][{!!$field!!}][from]" class="form-control" value="{{isset($searchedValue[$field.'_from']) ? $searchedValue[$field.'_from'] : ''}}">
 					</div>			
 				</div>				
 				<div class="to {!!isset($searchedValue[$field.'_to']) && $searchedValue[$field.'_to']!=='' ? 'searched' : ''!!}">
 					<label><span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
-					<div class="input input-group money">
+					<div class="input input-group {!!$opts['type']!!}">
 						<span class="input-group-addon">@lang('to:')</span>
-						<input type="text" name="search[][{!!$field!!}][to]" class="form-control" value="{{isset($searchedValue[$field.'_to']) ? $searchedValue[$field.'_to'] : ''}}">
+						<input type="number" step="1" name="search[][{!!$field!!}][to]" class="form-control" value="{{isset($searchedValue[$field.'_to']) ? $searchedValue[$field.'_to'] : ''}}">
 					</div>			
 				</div>		
 			</div>
 		<?php
-		break;
-		case 'integer':
-		case 'numeric': ?>
-			<div class="field double {!!$field!!}">				
+		case 'decimal': ?>
+			<div class="field double {!!$field!!}">
 				<div class="from {!!isset($searchedValue[$field.'_from']) && $searchedValue[$field.'_from']!=='' ? 'searched' : ''!!}">
 					<label>{!!$opts['label']!!} <span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
 					<div class="input input-group {!!$opts['type']!!}">
 						<span class="input-group-addon">@lang('from:')</span>
-						<input type="text" name="search[][{!!$field!!}][from]" class="form-control" value="{{isset($searchedValue[$field.'_from']) ? $searchedValue[$field.'_from'] : ''}}">
+						<input type="number" step="any" name="search[][{!!$field!!}][from]" class="form-control" value="{{isset($searchedValue[$field.'_from']) ? $searchedValue[$field.'_from'] : ''}}">
 					</div>			
 				</div>				
 				<div class="to {!!isset($searchedValue[$field.'_to']) && $searchedValue[$field.'_to']!=='' ? 'searched' : ''!!}">
 					<label><span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
 					<div class="input input-group {!!$opts['type']!!}">
 						<span class="input-group-addon">@lang('to:')</span>
-						<input type="text" name="search[][{!!$field!!}][to]" class="form-control" value="{{isset($searchedValue[$field.'_to']) ? $searchedValue[$field.'_to'] : ''}}">
+						<input type="number" step="any" name="search[][{!!$field!!}][to]" class="form-control" value="{{isset($searchedValue[$field.'_to']) ? $searchedValue[$field.'_to'] : ''}}">
 					</div>			
 				</div>		
 			</div>
