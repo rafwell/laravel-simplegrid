@@ -18,7 +18,7 @@ Rafwell\Simplegrid\SimplegridServiceProvider::class
 This package will writen to work with bootstrap 3 and Jquery. We need the following dependencies:
 
 * [Datetimepicker](https://eonasdan.github.io/bootstrap-datetimepicker/), for advanced search in date and datetime fields.
-* [Moment]https://github.com/moment/moment), for Datetimepicker work.
+* [Moment](https://github.com/moment/moment), for Datetimepicker work.
 
 Properly we added to our package those dependencies. You can add this from your ```public/vendor/rafwell/simplegrid```, like that:
 ####JS Files
@@ -65,6 +65,49 @@ In your view:
 ```@php
 {!!$grid->make()!!}
 ```
+The result will be like this:
+![Simple grid](http://i.imgur.com/X5idnfi.png)
+
+##An exemple more complex
+Change the code of your controller to:
+```
+$Grid->fields([
+    'birth_date'=>'Birthday',
+    'first_name'=>'First Name',
+    'last_name'=>'Last Name',
+    'gender'=>[
+        'label'=>'Gender',
+        'field'=>"case when gender = 'M' then 'Male' else 'Female' end"
+    ]
+])
+->actionFields([
+    'emp_no' //The fields used for process actions. those not are showed 
+])
+->advancedSearch([
+    'birth_date'=>['type'=>'date','label'=>'Birthday'],
+    'first_name'=>'First Name', // It's a shortcut for ['type'=>'text', 'label'=>'First Name'],
+    'last_name'=>[
+        //omiting the label. I'ts a shortcut, like above
+        'type'=>'text'
+    ],
+    'gender'=>[
+        'type'=>'select',
+        'label'=>'Gender',
+        'options'=>['Male'=>'Male', 'Female'=>'Female'] //The key is the value of option
+    ]
+]);
+
+$Grid->action('Edit', 'test/edit/{emp_no}')
+->action('Delete', 'test/{emp_no}', [
+    'confirm'=>'Do you with so continue?',
+    'method'=>'DELETE',
+]);
+
+$Grid->checkbox(true, 'emp_no');
+$Grid->bulkAction('Delete selected itens', '/test/bulk-delete');
+```
+The result will be like this:
+![Complex grid](https://image.ibb.co/jyi4aa/Captura_de_tela_de_2017_03_01_15_12_05.png)
 
 ##Disclaimer
 This repository is new, 'forked' from [rafwell/laravel-grid](https://github.com/rafwell/laravel-grid). The original repository does not contemple multi-language features. Him will'be descontinued when this is ready for production applications.
