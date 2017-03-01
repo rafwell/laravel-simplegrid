@@ -38,9 +38,9 @@ class Grid{
 
 	function __construct($query, $id, $config = []){
 		//merge the configurations
-		$this->simpleGridConfig = include __DIR__.'/../config/rafwell-simplegrid.php';
-		$this->simpleGridConfig = array_merge_recursive($this->simpleGridConfig, config('rafwell-simplegrid'));		
-		$this->simpleGridConfig = array_merge_recursive($this->simpleGridConfig, $config);
+		$this->simpleGridConfig = include __DIR__.'/../config/rafwell-simplegrid.php';		
+		$this->simpleGridConfig = array_merge($this->simpleGridConfig, config('rafwell-simplegrid'));				
+		$this->simpleGridConfig = array_merge($this->simpleGridConfig, $config);
 
 		$this->rowsPerPage = $this->simpleGridConfig['rowsPerPage'];
 		$this->currentRowsPerPage = $this->simpleGridConfig['currentRowsPerPage'];
