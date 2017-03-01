@@ -5,7 +5,7 @@
 **rafwell/laravel-simplegrid** is compatibly with Laravel 5.2+
 
 ##Instalation
-1. Add the dependency to your composer.json ```composer require "rafwell/laravel-simplegrid"``` or ```"rafwell/laravel-simplegrid": "~0.0"```.
+1. Add the dependency to your composer.json ```composer require "rafwell/laravel-simplegrid"``` or ```"rafwell/laravel-simplegrid": "~1.0"```.
 2. Execute ```composer update```.
 3. Add to your ```config/app.php``` our service provider:
 ```@php
