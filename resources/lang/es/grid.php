@@ -22,5 +22,6 @@ return [
 	'Page'=>'Página',
 	'from:'=>'de:',
 	'to:'=>'a:',
-	'Do you really want to apply this action to the selected items?'=>'¿Realmente desea aplicar esta acción a los elementos seleccionados?'
+	'Do you really want to apply this action to the selected items?'=>'¿Realmente desea aplicar esta acción a los elementos seleccionados?',
+	'Select at least one item to apply the action!'=>'Seleccione al menos un elemento para aplicar la acción.'
 ];

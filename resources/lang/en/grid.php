@@ -22,6 +22,7 @@ return [
 	'Page'=>'Page',
 	'from:'=>'from:',
 	'to:'=>'to:',
-	'Do you really want to apply this action to the selected items?'=>'Do you really want to apply this action to the selected items?'
+	'Do you really want to apply this action to the selected items?'=>'Do you really want to apply this action to the selected items?',
+	'Select at least one item to apply the action!'=>'Select at least one item to apply the action!'
 
 ];

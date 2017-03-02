@@ -20,8 +20,8 @@ return [
 	'Previous Page'=>'Página anterior',
 	'Next Page'=>'Próxima Página',
 	'Page'=>'Página',
-	'from:'=>'from:',
-	'to:'=>'to:',
-	'Do you really want to apply this action to the selected items?'=>'Deseja realmente aplicar esta ação aos itens selecionados?'
-
+	'from:'=>'de:',
+	'to:'=>'até:',
+	'Do you really want to apply this action to the selected items?'=>'Deseja realmente aplicar esta ação aos itens selecionados?',
+	'Select at least one item to apply the action!'=>'Selecione ao menos um item para aplicar a ação!'
 ];

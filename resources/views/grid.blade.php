@@ -60,7 +60,7 @@
 		<div class="col-md-8">
 			@if($bulkActions)
 			<div class="bulk-action">
-				<select name="grid_bulk_action" class="grid_bulk_action" data-token="{{ csrf_token() }}" data-confirm-msg="@lang('Do you really want to apply this action to the selected items?')" data-alert-msg="@lang('Select at least one item to apply the action!')">
+				<select name="grid_bulk_action" class="grid_bulk_action" data-token="{{ csrf_token() }}" data-confirm-msg="@lang('Simplegrid::grid.Do you really want to apply this action to the selected items?')" data-alert-msg="@lang('Simplegrid::grid.Select at least one item to apply the action!')">
 					<option value="">@lang('Simplegrid::grid.Apply to selected')</option>
 					@foreach($bulkActions as $action)
 					<option value="{{$action['url']}}">{!!$action['title']!!}</option>
@@ -167,7 +167,7 @@
 					<option value="xls">XLS</option>
 					<option value="csv">CSV</option>
 				</select>
-				<a href="#" data-href="{{$urlExport}}" target="_blank" class="input-group-addon btn-export" title="@lang('Export')" data-alert-msg="@lang('Simplegrid::grid.Select a format for export!')">
+				<a href="#" data-href="{{$urlExport}}" target="_blank" class="input-group-addon btn-export" title="@lang('Simplegrid::grid.Export')" data-alert-msg="@lang('Simplegrid::grid.Select a format for export!')">
 					<span class="glyphicon glyphicon-download"></span> @lang('Simplegrid::grid.Export')
 				</a>
 			</div>		
