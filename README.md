@@ -18,23 +18,24 @@ This package was written to work with bootstrap 3 and Jquery. We need  the follo
 * [Moment](https://github.com/moment/moment), for Datetimepicker work.
 
 Properly we added to our package those dependencies. You can add this from your ```public/vendor/rafwell/simple-grid```, like that:
-####JS Files
 
-```html
-<!-- ONLY INCLUDE IF YOU NOT HAVE THOSE DEPENDENCIES -->
-<script src="vendor/rafwell/simple-grid/moment/moment.js"></script>
-<script type="text/javascript" src="vendor/rafwell/simple-grid/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-
-<!-- JS LARAVELSIMPLEGRID -->
-<script src="vendor/rafwell/simple-grid/js/simplegrid.js"></script>
-```
 ####CSS Files
 ```html
 <!-- ONLY INCLUDE IF YOU NOT HAVE THOSE DEPENDENCIES -->
 <link rel="stylesheet" href="vendor/rafwell/simple-grid/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 
-<!-- CSS LARAVEL-SIMPLEGRID -->
+<!-- CSS LARAVEL SIMPLEGRID -->
 <link rel="stylesheet" href="vendor/rafwell/simple-grid/css/simplegrid.css">
+```
+
+####JS Files
+```html
+<!-- ONLY INCLUDE IF YOU NOT HAVE THOSE DEPENDENCIES -->
+<script src="vendor/rafwell/simple-grid/moment/moment.js"></script>
+<script type="text/javascript" src="vendor/rafwell/simple-grid/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+
+<!-- JS LARAVEL SIMPLEGRID -->
+<script src="vendor/rafwell/simple-grid/js/simplegrid.js"></script>
 ```
 
 ##An simple example
@@ -118,7 +119,7 @@ $Grid = new Grid($Employe, 'Employes');
 //Here, the key or array of fields is the name of the field. so, you can concatenate with the table name
 //You can make sub queries too
 $Grid->fields([
-    'birth_date'=>'Birthday', //If you not explicit the name of field, we use the principal table of query builded. in this case, employees's
+    'birth_date'=>'Birthday', //If you not explicit the name of table, we use the principal table of query builded. in this case, employees's
     'first_name'=>'First Name',
     'last_name'=>'Last Name', 
     'gender'=>[
