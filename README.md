@@ -8,7 +8,7 @@
 1. Add the dependency to your composer.json ```composer require "rafwell/laravel-simplegrid"``` or ```"rafwell/laravel-simplegrid": "~1.1"```.
 2. Execute ```composer update```.
 3. Add to your ```config/app.php``` our service provider:
-```@php
+```php
 Rafwell\Simplegrid\SimplegridServiceProvider::class
 ```
 4. Execute ```php artisan vendor:publish --provider="Rafwell\Simplegrid\SimplegridServiceProvider"```
@@ -23,7 +23,7 @@ This package was written to work with bootstrap 3 and Jquery. We need  the follo
 Properly we added to our package those dependencies. You can add this from your ```public/vendor/rafwell/simple-grid```, like that:
 ####JS Files
 
-```@html
+```html
 <!-- ONLY INCLUDE IF YOU NOT HAVE THOSE DEPENDENCIES -->
 <script src="vendor/rafwell/simple-grid/moment/moment.js"></script>
 <script type="text/javascript" src="vendor/rafwell/simple-grid/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
@@ -32,7 +32,7 @@ Properly we added to our package those dependencies. You can add this from your 
 <script src="vendor/rafwell/simple-grid/js/simplegrid.js"></script>
 ```
 ####CSS Files
-```
+```html
 <!-- ONLY INCLUDE IF YOU NOT HAVE THOSE DEPENDENCIES -->
 <link rel="stylesheet" href="vendor/rafwell/simple-grid/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 
@@ -43,11 +43,11 @@ Properly we added to our package those dependencies. You can add this from your 
 ##An simple example
 
 In your controller:
-```@php
+```php
 use Rafwell\Simplegrid\Grid;
 ```
 In your function:
-```@php
+```php
 $Grid = new Grid(Employe::query(), 'Employes');
     	
 $Grid->fields([
@@ -62,7 +62,7 @@ $Grid->fields([
 return view('yourview', ['grid'=>$Grid]);
 ```
 In your view:
-```@php
+```php
 {!!$grid->make()!!}
 ```
 The result will be like this:
@@ -70,7 +70,7 @@ The result will be like this:
 
 ##A more complex example
 Change the code of your controller to:
-```
+```php
 $Grid->fields([
     'birth_date'=>'Birthday',
     'first_name'=>'First Name',
@@ -112,7 +112,7 @@ The advanced search allow you search field by field. The rendered is like this:
 ![Complex grid advanced search](https://image.ibb.co/mvESva/Captura_de_tela_de_2017_03_01_15_14_03.png)
 
 ####Your model has relationships? Try it:
-```
+```php
 //Make your query using eloquent orm normally
 $Employe = Employe::join('supervisors', 'supervisors.id','=','employees.supervisor_id');
 
@@ -139,7 +139,7 @@ $Grid->fields([
 ```
 ####Mutators
 All mutators *get* of the principal table will work normally when the renderer called. For personalize or trait an line before show, for make an visual concatenate or formatter, you can use the ```processLine``` method:
-```
+```php
 $Grid->fields([
   'birth_date'=>'Birthday',
   'first_name'=>'First Name',
@@ -147,16 +147,15 @@ $Grid->fields([
   'gender'=>'Gender'
 ])
 ->processLine(function($row){
-    //this function will be called for each row
+    //This function will be called for each row
     $row['gender'] = $row['gender'] == 'M' ? 'Male' : 'Female';
-    //do more you need on this row
+    //Do more you need on this row
     return $row; //Do not forget to return the row
 });
 ```
 
 In some case, some actions cannot be called. For example, if you cannot allow edit button if the status is equal 2:
-
-```
+```php
 $Grid->fields([
   'birth_date'=>'Birthday',
   'first_name'=>'First Name',
@@ -166,10 +165,10 @@ $Grid->fields([
 ])
 >action('Edit', 'test/edit/{emp_no}')
 ->processLine(function($row){
-    //this function will be called for each row
+    //This function will be called for each row
     if($row['status']==2)
         unset($row['gridActions']['edit']);
-    //do more you need on this row
+    //Do more you need on this row
     return $row; //Do not forget to return the row
 });
 //Awesome!
