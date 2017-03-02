@@ -7,10 +7,7 @@
 ##Instalation
 1. Add the dependency to your composer.json ```composer require "rafwell/laravel-simplegrid"``` or ```"rafwell/laravel-simplegrid": "~1.1"```.
 2. Execute ```composer update```.
-3. Add to your ```config/app.php``` our service provider:
-```php
-Rafwell\Simplegrid\SimplegridServiceProvider::class
-```
+3. Add to your ```config/app.php``` our service provider: ```Rafwell\Simplegrid\SimplegridServiceProvider::class```
 4. Execute ```php artisan vendor:publish --provider="Rafwell\Simplegrid\SimplegridServiceProvider"```
 5. Include in your html the js and css dependencies.
 
