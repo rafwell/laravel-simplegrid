@@ -174,6 +174,9 @@ $Grid->fields([
 //Awesome!
 ```
 
+##Extra Configurations
+After you publish the our service provider, will apear in your config folder a file named ```rafwell-simplegrid.php```. In him, you can change the standard of date and datetime fields of advanced search, the initial value of 'showing x rows per page' and more!
+
 ##Language
 This package is multi-language. We use the location of you laravel instalattion, configured in your ```config/app.php```. If we have the translation this will be automatically loaded. 
 You can see the currently supported languages in our [lang folder](resources/lang).
