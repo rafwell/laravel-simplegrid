@@ -423,8 +423,11 @@ class Grid{
 										if($inputFormat!=$processFormat)
 											$valueProcessed = Carbon::createFromFormat($inputFormat, $valueAux)->format($processFormat);
 									break;
+									case 'integer':										
+										$valueProcessed = (int) $valueAux;
+									break;
 									case 'decimal':										
-										$valueAux = (int) $valueAux;
+										$valueProcessed = (float) $valueAux;
 									break;
 								}
 
