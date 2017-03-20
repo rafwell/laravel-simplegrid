@@ -1,8 +1,6 @@
 <div class="fields">
 <?php
-foreach($fields as $field=>$opts){
-	if(!is_array($opts)) $opts = ['type'=>$opts];
-	if(!isset($opts['label'])) $opts['label'] = ucwords(str_replace('-', ' ', str_slug($field)));
+foreach($fields as $field=>$opts){	
 	switch ($opts['type']){
 		case 'text': ?>
 			<div class="field {!!$field!!} {!!isset($searchedValue[$field]) && $searchedValue[$field]!=='' ? 'searched' : ''!!}">
@@ -67,6 +65,7 @@ foreach($fields as $field=>$opts){
 				</div>		
 			</div>
 		<?php
+		break;
 		case 'decimal': ?>
 			<div class="field double {!!$field!!}">
 				<div class="from {!!isset($searchedValue[$field.'_from']) && $searchedValue[$field.'_from']!=='' ? 'searched' : ''!!}">

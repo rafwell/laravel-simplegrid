@@ -57,7 +57,7 @@ $(document).ready(function(){
     });
 
     $('.grid-container .advanced-search .field .btn-remove').click(function(){
-        $(this).closest('.field').not('.duplo').find('input, select').val('');
+        $(this).closest('.field').not('.double').find('input, select').val('');
         $(this).closest('.from').find('input, select').val('');
         $(this).closest('.to').find('input, select').val('');
         $(this).closest('form').submit();
