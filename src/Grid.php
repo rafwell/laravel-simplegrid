@@ -331,7 +331,7 @@ class Grid{
 		//make a subquery
 		$bindings = $this->query->getBindings();
 		$subQuery = clone($this->query);
-		$subQuery = $subQuery->select($selectCampos);
+		$subQuery = $subQuery->select($selectCampos);		
 
 		$this->query = $this->query->getModel()->newQuery();
 
@@ -483,13 +483,17 @@ class Grid{
 		$bindings = $this->query->getBindings();
 		$bindings = array_merge($bindings2, $bindings);		
 
+		//before paginate and limit, count total rows			
+		$this->totalRows = $subQuery->count();
+
+		//limit
+		if(!$this->export || ($this->export && ($this->Request->get('export')!='xls' && $this->Request->get('export')!='csv')))
+			$subQuery->skip(($this->currentPage-1)*$this->currentRowsPerPage)->take($this->currentRowsPerPage);		
+
 		$this->query->from( DB::raw('('.$subQuery->toSql().') '.$this->query->getModel()->getTable().' ') );
 
 		$this->query->setBindings($bindings);		
 		
-		//before paginate, count total rows	
-		
-		$this->totalRows = $this->query->count();
 		
 		if($this->Request->get('rows-per-page')){
 			$getRowsperPage = (int) $this->Request->get('rows-per-page');
@@ -514,10 +518,7 @@ class Grid{
 			foreach($this->defaultOrder as $order){				
 				$this->query->orderBy($order[0], $order[1]);
 			}
-		}
-
-		if(!$this->export || ($this->export && ($this->Request->get('export')!='xls' && $this->Request->get('export')!='csv')))
-			$this->query->skip(($this->currentPage-1)*$this->currentRowsPerPage)->take($this->currentRowsPerPage);		
+		}		
 
 		//execute builded query
 		
