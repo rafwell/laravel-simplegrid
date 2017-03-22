@@ -183,7 +183,7 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 	}
 
 	public function getTotalRows(){		
-		$countModel = $this->model;
+		$countModel = clone($this->model);
 		$countModel->getQuery()->orders = null;
 
 		return $countModel->count();
