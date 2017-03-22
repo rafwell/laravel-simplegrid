@@ -6,6 +6,7 @@ use DB;
 use Rafwell\Grid\Helpers;
 use Carbon\Carbon;
 use View;
+use Exception;
 
 class Grid{
 	private $view;	
@@ -77,6 +78,8 @@ class Grid{
 				$v['alias_after_query_executed'] = $k;
 			}
 
+			$v['show'] = true;
+
 			$this->selectFields[$k] = $k;
 		}				
 
@@ -94,14 +97,23 @@ class Grid{
 	}	
 
 	public function actionFields($fields){
-		$this->actionFields = $fields;
+		$actionFields = $fields;
 
 		foreach($fields as $k){
+			$this->actionFields[$k] = [
+				'label'=>$k,
+				'field'=>$k,
+				'alias'=>$k,
+				'show'=>false			
+			];
+
 			$strrpos = strrpos($k, '.');
 			if($strrpos!==false){
-				$k = substr($k, $strrpos+1);
+				$this->actionFields[$k] ['alias_after_query_executed'] = substr($k, $strrpos+1);				
+			}else{
+				$this->actionFields[$k] ['alias_after_query_executed'] = $k;
 			}
-			$this->selectFields[$k] = $k;
+
 		}
 
 		return $this;
@@ -226,18 +238,7 @@ class Grid{
 
 	public function advancedSearch($opts){
 		$this->advancedSearch = true;
-		$this->advancedSearchFields = $opts;
-		foreach($opts as $k=>$v){
-			$strrpos = strrpos($k, '.');
-			if($strrpos!==false){
-				$k = substr($k, $strrpos+1);
-			}			
-
-			if(is_array($v) && isset($v['where']) && $v['where']!==false)
-				continue;
-
-			$this->selectFields[$k] = $k;
-		}
+		$this->advancedSearchFields = $opts;		
 
 		foreach ($this->advancedSearchFields as $key => &$field) {
 			if(is_string($field)){
@@ -280,7 +281,17 @@ class Grid{
 		return $this;
 	}
 
+	public function validateFields(){
+		foreach($this->advancedSearchFields as $field=>$opts){
+			if(!isset( $this->fields[$field] ))
+				throw new Exception('The field "'.$field.'" in advancedSearch must exists in fields array');
+				
+		}
+	}
+
 	public function make(){
+		$this->validateFields();
+
 		//process all fields needed to run this grid
 		$this->queryBuilder->processUsedFields($this->fields, $this->actionFields, $this->advancedSearchFields);		
 		
@@ -289,45 +300,8 @@ class Grid{
 		if($this->Request->grid==$this->id){
 			if(isset($this->Request->search)){
 				if(is_string($this->Request->search)){					
+					//make where simple search
 					$this->queryBuilder->performSimpleSearch( $this->Request->search );
-
-					//simple search
-					
-					/*
-					$whereSearch = '';
-
-					foreach($this->fields as $field=>$label){
-						if($strrpos = strrpos($field, '.'))
-							$field = substr($field, $strrpos+1);
-
-						switch ($this->driverName) {
-							case 'odbc':
-								$whereSearch.='+'.$field;
-							break;
-							case 'sqlsrv':								
-								$whereSearch.="+COALESCE(CAST($field AS NVARCHAR(MAX)), '')";
-							break;
-							default:
-								$whereSearch.=",COALESCE($field, '')";
-							break;
-						}						
-					}
-
-					if($whereSearch){
-						switch ($this->driverName) {
-							case 'odbc':
-							case 'sqlsrv':
-								//sqlserver < 2012 not have a concat function
-								$whereSearch = substr($whereSearch, 1);
-							break;
-							default:
-								$whereSearch = 'CONCAT('.substr($whereSearch, 1).')';
-							break;
-						}							
-						$this->query->where(DB::raw($whereSearch), 'like', '%'.$this->Request->search.'%');
-
-					}
-					*/
 				}else{
 					//make where advanced search
 					$this->queryBuilder->performAdvancedSearch($this->Request->search, $this->advancedSearchFields, $this->simpleGridConfig['advancedSearch']);

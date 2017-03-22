@@ -8,9 +8,9 @@ use Exception;
 use Carbon\Carbon;
 
 class DefaultQueryBuilder implements QueryBuilderContract{
-	private $fieldsForSelect = [];
-	private $model;
-	private $searchedValue;
+	protected $fieldsForSelect = [];
+	protected $model;
+	protected $searchedValue;
 
 	public function __construct(Builder $model){
 		$this->model = $model;
@@ -145,7 +145,14 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 
 	public function processUsedFields($fields, $actionFields, $advancedSearchFields){		
 		$usedFields = $this->processFields($fields);
-		$usedFields = array_replace( $usedFields, $this->processActionFields($actionFields) );
+
+		$processedActionFields = $this->processActionFields($actionFields);		
+
+		foreach($processedActionFields as $key => $processed){			
+			if(!isset($usedFields[$key])){
+				$usedFields[$key] = $processed;
+			}
+		}
 
 		$this->setFieldsForSelect($usedFields);
 
@@ -158,14 +165,11 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 
 	private function processActionFields(array $actionFields = []){
 		$fields = [];
-		foreach($actionFields as $field){
-			dd($field);
-		}
 
-		return $fields;
+		return $actionFields;
 	}
 
-	private function getSimpleSearchConcatenatedFields(){
+	public function getSimpleSearchConcatenatedFields(){
 		$where = '';
 		
 		foreach($this->fieldsForSelect as $field){			
@@ -179,10 +183,13 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 	}
 
 	public function getTotalRows(){		
-		return $this->model->count();
+		$countModel = $this->model;
+		$countModel->getQuery()->orders = null;
+
+		return $countModel->count();
 	}
 
-	public function performQueryAndGetRows(){	
+	public function performQueryAndGetRows(){			
 		return $this->model->select( $this->getFieldsForSelect() )->get()->toArray();
 	}	
 }
