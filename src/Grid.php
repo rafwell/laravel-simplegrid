@@ -1,6 +1,6 @@
 <?php
 namespace Rafwell\Simplegrid;
-use Rafwell\Grid\GridController;
+use Rafwell\Simplegrid\Query\QueryBuilder;
 use Illuminate\Http\Request;
 use DB;
 use Rafwell\Grid\Helpers;
@@ -8,11 +8,11 @@ use Carbon\Carbon;
 use View;
 
 class Grid{
-	private $view;
-	public $query;
+	private $view;	
 	public $id;
 	public $fields;
-	public $extraFields;
+	public $actionFields = [];
+	public $extraFields = [];
 	public $selectFields = [];	
 	public $actions;
 	public $currentPage = 1;	
@@ -31,12 +31,12 @@ class Grid{
 	public $processLineClosure;
 	public $export = true;
 	public $showTrashedLines = false;
-	public $defaultOrder = []; //['field', 'direction']
-	private $driverName = '';
+	public $defaultOrder = []; //['field', 'direction']	
 	private $allowExport = true;
 	private $simpleGridConfig;
+	private $queryBuilder;
 
-	function __construct($query, $id, $config = []){
+	function __construct($query, $id, $config = []){		
 		//merge the configurations
 		$this->simpleGridConfig = include __DIR__.'/../config/rafwell-simplegrid.php';		
 		$this->simpleGridConfig = array_merge($this->simpleGridConfig, config('rafwell-simplegrid'));				
@@ -46,33 +46,39 @@ class Grid{
 		$this->currentRowsPerPage = $this->simpleGridConfig['currentRowsPerPage'];
 		$this->allowExport = $this->simpleGridConfig['allowExport'];		
 
-		$this->query = $query;		
+		$this->queryBuilder = (new QueryBuilder($query))->getBuilder();
 		$this->id = $id;				
-		$this->Request = Request::capture();
-		$this->driverName = strtolower($this->query->getConnection()->getPdo()->getAttribute(\PDO::ATTR_DRIVER_NAME));
+		$this->Request = Request::capture();		
 		return $this;
 	}
 
 	public function fields($fields){
-		foreach($fields as $k=>$v){
+		foreach($fields as $k=>&$v){
 			if(is_string($v)){
 				$v = [
 					'label'=>$v,
-					'field'=>$k
+					'field'=>$k,
+					'alias'=>$k					
 				];
 			}else{
 				if(!isset($v['label']))
 					$v['label'] = ucwords( str_replace('_', ' ', $k) );
-			}
-			$strrpos = strrpos($k, '.');
-			if($strrpos!==false){
-				$v['alias'] = substr($k, $strrpos+1);				
-			}else{
+
 				$v['alias'] = $k;
 			}
 
+
 			$fields[$k] = $v;
-		}
+
+			$strrpos = strrpos($k, '.');
+			if($strrpos!==false){
+				$v['alias_after_query_executed'] = substr($k, $strrpos+1);				
+			}else{
+				$v['alias_after_query_executed'] = $k;
+			}
+
+			$this->selectFields[$k] = $k;
+		}				
 
 		foreach($fields as $k=>$v){
 			$strrpos = strrpos($k, '.');
@@ -80,7 +86,7 @@ class Grid{
 				$k = substr($k, $strrpos+1);
 			}
 			$this->selectFields[$k] = $k;
-		}
+		}	
 
 		$this->fields = $fields;
 
@@ -248,8 +254,8 @@ class Grid{
 			}
 
 			if(!isset($field['onlySubWhere']))
-				$field['onlySubWhere'] = false;
-		}
+				$field['onlySubWhere'] = false;			
+		}		
 				
 		return $this;
 	}
@@ -274,77 +280,21 @@ class Grid{
 		return $this;
 	}
 
-	public function make(){		
-		$fields = $this->fields;		
-
-		$selectCampos = [];
-
+	public function make(){
+		//process all fields needed to run this grid
+		$this->queryBuilder->processUsedFields($this->fields, $this->actionFields, $this->advancedSearchFields);		
 		
-		foreach($fields as $k=>$v){
-			if(strpos($v['field'], ' ')!==false){
-				$v['field'] = '('.$v['field'].')';
-			}
-			if($v['field'] <> $v['alias']){
-				switch ($this->driverName) {
-					case 'odbc':
-						$selectCampos[] = $v['field'].' as ['.$v['alias'].']';
-					break;
-					default:						
-						$selectCampos[] = $v['field'].' as '.$v['alias'];
-					break;
-				}				
-			}
-			else 
-				$selectCampos[] = $v['field'];
-		}		
-
-		if(isset($this->actionFields)){
-			foreach($this->actionFields as $field){
-				$this->extraFields[$field] = $field;
-			}
-		}					
-
-		foreach($this->advancedSearchFields as $field=>$opts){
-			if($opts['where']!==false || $opts['onlySubWhere']===true) continue;
-				$this->extraFields[$field] = $field;
-		}		
-
-		if(isset($this->extraFields)){
-			foreach($this->extraFields as $fieldAdicional){
-				$existe = false;
-				foreach($this->fields as $field){
-					if($field['alias']==$fieldAdicional || $field['field']== $fieldAdicional){
-						$existe = true;
-						break;
-					}
-				}
-				if(!$existe){
-					$selectCampos[] = $fieldAdicional;
-				}
-			}
-		}
-				
-		for($i=0;$i<count($selectCampos);$i++){
-			$selectCampos[$i] = DB::raw($selectCampos[$i]);
-		}		
-			
-		//make a subquery
-		$bindings = $this->query->getBindings();
-		$subQuery = clone($this->query);
-		$subQuery = $subQuery->select($selectCampos);		
-
-		$this->query = $this->query->getModel()->newQuery();
+		//if have 2 grids in same page, the search, ordenation, etc, will work only for the last action
 
 		if($this->Request->grid==$this->id){
-			//pagination
-			$this->currentPage = $this->Request->page ? $this->Request->page : 1;
-			
 			if(isset($this->Request->search)){
-				if(is_string($this->Request->search)){
+				if(is_string($this->Request->search)){					
+					$this->queryBuilder->performSimpleSearch( $this->Request->search );
+
 					//simple search
-					$this->searchedValue = htmlentities($this->Request->search);
-				
-					$whereBusca = '';
+					
+					/*
+					$whereSearch = '';
 
 					foreach($this->fields as $field=>$label){
 						if($strrpos = strrpos($field, '.'))
@@ -352,177 +302,72 @@ class Grid{
 
 						switch ($this->driverName) {
 							case 'odbc':
-								$whereBusca.='+'.$field;
+								$whereSearch.='+'.$field;
 							break;
 							case 'sqlsrv':								
-								$whereBusca.="+COALESCE(CAST($field AS NVARCHAR(MAX)), '')";
+								$whereSearch.="+COALESCE(CAST($field AS NVARCHAR(MAX)), '')";
 							break;
 							default:
-								$whereBusca.=",COALESCE($field, '')";
+								$whereSearch.=",COALESCE($field, '')";
 							break;
 						}						
 					}
 
-					if($whereBusca){
+					if($whereSearch){
 						switch ($this->driverName) {
 							case 'odbc':
 							case 'sqlsrv':
 								//sqlserver < 2012 not have a concat function
-								$whereBusca = substr($whereBusca, 1);
+								$whereSearch = substr($whereSearch, 1);
 							break;
 							default:
-								$whereBusca = 'CONCAT('.substr($whereBusca, 1).')';
+								$whereSearch = 'CONCAT('.substr($whereSearch, 1).')';
 							break;
 						}							
-						$this->query->where(DB::raw($whereBusca), 'like', '%'.$this->Request->search.'%');
+						$this->query->where(DB::raw($whereSearch), 'like', '%'.$this->Request->search.'%');
 
 					}
+					*/
 				}else{
 					//make where advanced search
-					for($i=0;$i<count($this->Request->search);$i++){						
-
-						foreach($this->Request->search[$i] as $field=>$value){							
-							if($this->advancedSearchFields[$field]['onlySubWhere']===true)
-								$queryBusca =& $subQuery;
-							else
-								$queryBusca =& $this->query;
-
-							$fieldAux = $field;							
-
-							if(is_string($value)){
-								$this->searchedValue[$field] = $value;
-
-								if($value!=='' && $this->advancedSearchFields[$field]['where']===false){	
-									if(is_string($this->advancedSearchFields[$field]) || $this->advancedSearchFields[$field]['type']=='text')
-										$queryBusca->where($fieldAux, 'like', '%'.$value.'%');
-									else									
-										$queryBusca->where($fieldAux, $value);
-								}
-								$valueProcessed = $value;
-							}else{
-								if(isset($value['from']) && $value['from']!=='')
-									$valueAux = $value['from'];
-								else
-								if(isset($value['to']) && $value['to']!=='')									
-									$valueAux = $value['to'];
-								else
-									$valueAux = '';
-
-								switch ($this->advancedSearchFields[$field]['type']) {
-									case 'date':
-									case 'datetime':
-										if(!$valueAux) continue;
-
-										$type = $this->advancedSearchFields[$field]['type'];
-										$inputFormat = $this->simpleGridConfig['advancedSearch']['formats'][$type]['input'][1];
-
-										$processFormat = $this->simpleGridConfig['advancedSearch']['formats'][$type]['processTo'][1];
-
-										$valueProcessed = $valueAux;
-										
-										if($inputFormat!=$processFormat)
-											$valueProcessed = Carbon::createFromFormat($inputFormat, $valueAux)->format($processFormat);
-									break;
-									case 'integer':										
-										$valueProcessed = (int) $valueAux;
-									break;
-									case 'decimal':										
-										$valueProcessed = (float) $valueAux;
-									break;
-								}
-
-								if(isset($value['from']) && $value['from']!==''){
-									$this->searchedValue[$field.'_from'] = $valueAux;
-									if($this->advancedSearchFields[$field]['where']===false)
-										$queryBusca->where($fieldAux, '>=', $valueProcessed);
-								}
-								
-								if(isset($value['to']) && $value['to']!==''){
-									$this->searchedValue[$field.'_to'] = $valueAux;
-									if($this->advancedSearchFields[$field]['where']===false)
-										$queryBusca->where($fieldAux, '<=', $valueProcessed);
-								}
-							}
-
-							if($this->advancedSearchFields[$field]['where']){								
-								call_user_func($this->advancedSearchFields[$field]['where'], $this, $queryBusca, $valueProcessed, $fieldAux);
-							}
-						}
-					}
+					$this->queryBuilder->performAdvancedSearch($this->Request->search, $this->advancedSearchFields, $this->simpleGridConfig['advancedSearch']);
 				}
 			}			
 
 			//advanced search
 			if($this->Request['advanced-search']) $this->advancedSearchOpened = true;
-		}		
 
-		if(method_exists($subQuery->getModel(), 'getQualifiedDeletedAtColumn')){
-			$positionDeletedAt = mb_strpos($subQuery->toSql(), '`'.$subQuery->getModel()->getTable().'`.`deleted_at` ');				
-			if($positionDeletedAt!==false && $this->showTrashedLines === false){					
-				$deleted_at = mb_substr($subQuery->toSql(), $positionDeletedAt);
-				
-				if(mb_strpos($deleted_at, ' ')!==false){
-					//someone queries have group by
-					$deleted_at = mb_substr($deleted_at, 0, mb_strpos($deleted_at, 'null')+4);				
-				}				
-
-				$subQuery->whereRaw($deleted_at);									
-			}else{
-				$subQuery->withTrashed();
-			}
-			$this->query->withTrashed();
-		}
-
-		if($removedScopes = $subQuery->removedScopes()){
-			$this->query->withoutGlobalScopes($removedScopes);
+			//sort
+			if(isset($this->Request->order) && isset($this->Request->direction)){
+				$this->queryBuilder->sort($this->Request->order, ($this->Request->direction == 'asc' ? 'asc' : 'desc'));
+			}			
 		}
 		
-		$this->query->select('*');		
 		
-		$bindings2 = $subQuery->getBindings();
-		$bindings = $this->query->getBindings();
-		$bindings = array_merge($bindings2, $bindings);		
-
-		//before paginate and limit, count total rows			
-		$this->totalRows = $subQuery->count();
-
-		//limit
-		if(!$this->export || ($this->export && ($this->Request->get('export')!='xls' && $this->Request->get('export')!='csv')))
-			$subQuery->skip(($this->currentPage-1)*$this->currentRowsPerPage)->take($this->currentRowsPerPage);		
-
-		$this->query->from( DB::raw('('.$subQuery->toSql().') '.$this->query->getModel()->getTable().' ') );
-
-		$this->query->setBindings($bindings);		
+		//before paginate, count total rows	
+		$this->totalRows = $this->queryBuilder->getTotalRows();
 		
-		
+		//paginate
 		if($this->Request->get('rows-per-page')){
 			$getRowsperPage = (int) $this->Request->get('rows-per-page');
 			if(array_search($getRowsperPage, $this->rowsPerPage)!==false)
 				$this->currentRowsPerPage = $getRowsperPage;
 		}
 
+		$this->currentPage = $this->Request->page ? $this->Request->page : 1;
+
 		$this->totalPages = intval(ceil(($this->totalRows/$this->currentRowsPerPage)));
 
 		if($this->currentPage>$this->totalPages)
 			$this->currentPage = $this->totalPages;		
-		
-		//make ordernation		
 
-		if(isset($this->Request->order) && isset($this->Request->direction)){
-			if($strrpos = strrpos($this->Request->order, '.'))
-				$this->Request->order = substr($this->Request->order, $strrpos+1);
-
-			$this->query->orderBy($this->Request->order, ($this->Request->direction == 'asc' ? 'asc' : 'desc'));
-		}else
-		if($this->defaultOrder){
-			foreach($this->defaultOrder as $order){				
-				$this->query->orderBy($order[0], $order[1]);
-			}
-		}		
+		if(!$this->export || ($this->export && ($this->Request->get('export')!='xls' && $this->Request->get('export')!='csv'))){
+			$this->queryBuilder->paginate($this->currentRowsPerPage, $this->currentPage);
+		}
 
 		//execute builded query
 		
-		$rows = $this->query->get()->toArray();
+		$rows = $this->queryBuilder->performQueryAndGetRows();
 
 		if($this->export && ($this->Request->get('export')=='xls' || $this->Request->get('export')=='csv')){
 			array_unshift($rows, $this->fields);
@@ -546,6 +391,7 @@ class Grid{
 			})->download( $this->Request->get('export') );
 
 		}
+
 	    $nrLines = count($rows);
 
 	    //translate actions
@@ -570,7 +416,7 @@ class Grid{
 	    	}
 	    }	    
 
-	    //make
+	    //make	    
 	    
 	    $this->view = View::make('Simplegrid::grid', [
 	      'rows'=>$rows,
@@ -580,7 +426,7 @@ class Grid{
 	      'currentPage'=>$this->currentPage,	      
 	      'totalPages'=>$this->totalPages,
 	      'id'=>$this->id,	      
-	      'searchedValue'=>$this->searchedValue,
+	      'searchedValue'=>$this->queryBuilder->getSearchedValue(),
 	      'fieldsRequest'=>$this->getFieldsRequest(),
 	      'urlPagination'=>$this->getUrl('pagination'),
 	      'checkbox'=>$this->checkbox,
