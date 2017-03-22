@@ -1,6 +1,6 @@
 <div class="fields">
 <?php
-foreach($fields as $field=>$opts){	
+foreach($fields as $field=>$opts){		
 	switch ($opts['type']){
 		case 'text': ?>
 			<div class="field {!!$field!!} {!!isset($searchedValue[$field]) && $searchedValue[$field]!=='' ? 'searched' : ''!!}">
