@@ -314,9 +314,15 @@ class Grid{
 			if($this->Request['advanced-search']) $this->advancedSearchOpened = true;
 
 			//sort
-			if(isset($this->Request->order) && isset($this->Request->direction)){
+			if(isset($this->Request->order) && isset($this->Request->direction)){				
 				$this->queryBuilder->sort($this->Request->order, ($this->Request->direction == 'asc' ? 'asc' : 'desc'));
-			}			
+			}else{
+				if($this->defaultOrder)
+					$this->queryBuilder->sort($this->defaultOrder[0][0], ($this->defaultOrder[0][1] == 'asc' ? 'asc' : 'desc'));				
+			}
+		}else{
+			if($this->defaultOrder)
+				$this->queryBuilder->sort($this->defaultOrder[0][0], ($this->defaultOrder[0][1] == 'asc' ? 'asc' : 'desc'));				
 		}
 		
 		
