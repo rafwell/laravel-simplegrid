@@ -54,6 +54,8 @@ class Grid{
 	}
 
 	public function fields($fields){
+		
+
 		foreach($fields as $k=>&$v){
 			if(is_string($v)){
 				$v = [
@@ -78,18 +80,18 @@ class Grid{
 				$v['alias_after_query_executed'] = $k;
 			}
 
-			$v['show'] = true;
+			$v['show'] = true;			
 
 			$this->selectFields[$k] = $k;
 		}				
 
-		foreach($fields as $k=>$v){
+		foreach($fields as $k=>&$v){
 			$strrpos = strrpos($k, '.');
 			if($strrpos!==false){
 				$k = substr($k, $strrpos+1);
 			}
 			$this->selectFields[$k] = $k;
-		}	
+		}
 
 		$this->fields = $fields;
 
@@ -256,7 +258,7 @@ class Grid{
 
 			if(!isset($field['onlySubWhere']))
 				$field['onlySubWhere'] = false;			
-		}		
+		}
 				
 		return $this;
 	}
@@ -341,7 +343,7 @@ class Grid{
 
 		//execute builded query
 		
-		$rows = $this->queryBuilder->performQueryAndGetRows();
+		$rows = $this->queryBuilder->performQueryAndGetRows();		
 
 		if($this->export && ($this->Request->get('export')=='xls' || $this->Request->get('export')=='csv')){
 			array_unshift($rows, $this->fields);

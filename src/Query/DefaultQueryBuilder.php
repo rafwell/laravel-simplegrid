@@ -189,7 +189,7 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 		return $countModel->count();
 	}
 
-	public function performQueryAndGetRows(){			
+	public function performQueryAndGetRows(){	
 		return $this->model->select( $this->getFieldsForSelect() )->get()->toArray();
 	}	
 }
