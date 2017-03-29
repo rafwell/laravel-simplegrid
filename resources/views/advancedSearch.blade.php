@@ -3,16 +3,16 @@
 foreach($fields as $field=>$opts){		
 	switch ($opts['type']){
 		case 'text': ?>
-			<div class="field {!!$field!!} {!!isset($searchedValue[$field]) && $searchedValue[$field]!=='' ? 'searched' : ''!!}">
+			<div class="field {!!str_replace('.', '_', $field)!!} {!!isset($searchedValue[$field]) && $searchedValue[$field]!=='' ? 'searched' : ''!!}">
 				<label>{!!$opts['label']!!} <span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></span> </label>
 				<input type="text" name="search[][{!!$field!!}]" value="{{isset($searchedValue[$field]) ? $searchedValue[$field] : ''}}" class="form-control" placeholder="{{isset($opts['placeholder']) ? $opts['placeholder'] : ''}}"/>
 			</div>
 		<?php
 		break;
 		case 'select': ?>
-			<div class="field {!!$field!!} {!!isset($searchedValue[$field]) && $searchedValue[$field]!=='' ? 'searched' : ''!!}">
+			<div class="field {!!str_replace('.', '_', $field)!!} {!!isset($searchedValue[$field]) && $searchedValue[$field]!=='' ? 'searched' : ''!!}">
 				<label>{!!$opts['label']!!} <span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
-				<select name="search[][{!!$field!!}]" class="form-control">
+				<select name="search[][{!!$field!!}]" class="form-control" data-value="{{isset($searchedValue[$field]) && $searchedValue[$field]!=='' ? $searchedValue[$field] : ''}}">
 					<option value="">{{isset($opts['placeholder']) ? $opts['placeholder'] : ''}}</option>					
 					@foreach($opts['options'] as $value=>$label)					
 					<option value="{{$value}}" {!!isset($searchedValue[$field]) && $searchedValue[$field]!=='' && $searchedValue[$field]==$value ? 'selected' : ''!!}>{{$label}}</option>
@@ -23,7 +23,7 @@ foreach($fields as $field=>$opts){
 		break;
 		case 'date':
 		case 'datetime': ?>
-			<div class="field double {!!$field!!}" data-format-input="{{$simpleGridConfig['advancedSearch']['formats'][$opts['type']]['input'][0]}}">
+			<div class="field double {!!str_replace('.', '_', $field)!!}" data-format-input="{{$simpleGridConfig['advancedSearch']['formats'][$opts['type']]['input'][0]}}">
 				<div class="from {!!isset($searchedValue[$field.'_from']) && $searchedValue[$field.'_from']!=='' ? 'searched' : ''!!}">
 					<label>{!!$opts['label']!!} <span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
 					<div class="input input-group {!!$opts['type']!!} datetimepicker">
@@ -48,7 +48,7 @@ foreach($fields as $field=>$opts){
 		<?php
 		break;
 		case 'integer': ?>
-			<div class="field double {!!$field!!}">
+			<div class="field double {!!str_replace('.', '_', $field)!!}">
 				<div class="from {!!isset($searchedValue[$field.'_from']) && $searchedValue[$field.'_from']!=='' ? 'searched' : ''!!}">
 					<label>{!!$opts['label']!!} <span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
 					<div class="input input-group {!!$opts['type']!!}">
@@ -67,7 +67,7 @@ foreach($fields as $field=>$opts){
 		<?php
 		break;
 		case 'decimal': ?>
-			<div class="field double {!!$field!!}">
+			<div class="field double {!!str_replace('.', '_', $field)!!}">
 				<div class="from {!!isset($searchedValue[$field.'_from']) && $searchedValue[$field.'_from']!=='' ? 'searched' : ''!!}">
 					<label>{!!$opts['label']!!} <span class="btn-remove"><span class="glyphicon glyphicon-remove"></span></label>
 					<div class="input input-group {!!$opts['type']!!}">

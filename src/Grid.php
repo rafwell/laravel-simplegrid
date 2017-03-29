@@ -257,7 +257,10 @@ class Grid{
 			}
 
 			if(!isset($field['onlySubWhere']))
-				$field['onlySubWhere'] = false;			
+				$field['onlySubWhere'] = false;		
+
+			if(!isset($field['options']))
+				$field['options'] = [];	
 		}
 				
 		return $this;
@@ -285,8 +288,8 @@ class Grid{
 
 	public function validateFields(){
 		foreach($this->advancedSearchFields as $field=>$opts){
-			if(!isset( $this->fields[$field] ))
-				throw new Exception('The field "'.$field.'" in advancedSearch must exists in fields array');
+			if(!isset( $this->fields[$field] ) && !isset($this->actionFields[$field]))
+				throw new Exception('The field "'.$field.'" in advancedSearch must exists in fields or actionFields array');
 				
 		}
 	}

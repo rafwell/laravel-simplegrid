@@ -1,4 +1,4 @@
-<div class="grid-container" id="grid{{$id}}">	
+<div class="grid-container grid" id="grid{{$id}}">	
 	<span></span>
 	@if ($advancedSearch && $advancedSearchOpened === true)
 		<div class="search advanced-search {{isset($searchedValue) && $searchedValue<>'' ? 'searched' : ''}}">
