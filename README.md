@@ -1,17 +1,17 @@
-##About this project
+## About this project
 **rafwell/laravel-simplegrid** is a component for build powerful grids, with less code. The component is ready to work with Bootstrap 3, have features to export to xls/csv, simple/advanced search, ordenation, actions inline or bulk.
 
-##Compatibility
+## Compatibility
 **rafwell/laravel-simplegrid** is compatibly with Laravel 5.2+
 
-##Instalation
+## Instalation
 1. Add the dependency to your composer.json ```composer require "rafwell/laravel-simplegrid"``` or ```"rafwell/laravel-simplegrid": "~1.1"```.
 2. Execute ```composer update```.
 3. Add to your ```config/app.php``` our service provider: ```Rafwell\Simplegrid\SimplegridServiceProvider::class```
 4. Execute ```php artisan vendor:publish --provider="Rafwell\Simplegrid\SimplegridServiceProvider"```
 5. Include in your html the js and css dependencies.
 
-###Dependencies
+### Dependencies
 This package was written to work with bootstrap 3 and Jquery. We need  the following dependencies:
 
 * [Datetimepicker](https://eonasdan.github.io/bootstrap-datetimepicker/), for advanced search in date and datetime fields.
@@ -19,7 +19,7 @@ This package was written to work with bootstrap 3 and Jquery. We need  the follo
 
 Properly we added to our package those dependencies. You can add this from your ```public/vendor/rafwell/simple-grid```, like that:
 
-####CSS Files
+#### CSS Files
 ```html
 <!-- ONLY INCLUDE IF YOU NOT HAVE THOSE DEPENDENCIES -->
 <link rel="stylesheet" href="vendor/rafwell/simple-grid/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
@@ -28,7 +28,7 @@ Properly we added to our package those dependencies. You can add this from your 
 <link rel="stylesheet" href="vendor/rafwell/simple-grid/css/simplegrid.css">
 ```
 
-####JS Files
+#### JS Files
 ```html
 <!-- ONLY INCLUDE IF YOU NOT HAVE THOSE DEPENDENCIES -->
 <script src="vendor/rafwell/simple-grid/moment/moment.js"></script>
@@ -38,7 +38,7 @@ Properly we added to our package those dependencies. You can add this from your 
 <script src="vendor/rafwell/simple-grid/js/simplegrid.js"></script>
 ```
 
-##An simple example
+## An simple example
 
 In your controller:
 ```php
@@ -66,7 +66,7 @@ In your view:
 The result will be like this:
 ![Simple grid](http://i.imgur.com/X5idnfi.png)
 
-##A more complex example
+## A more complex example
 Change the code of your controller to:
 ```php
 $Grid->fields([
@@ -109,7 +109,7 @@ The result will be like this:
 The advanced search allow you search field by field. The rendered is like this:
 ![Complex grid advanced search](https://image.ibb.co/mvESva/Captura_de_tela_de_2017_03_01_15_14_03.png)
 
-####Your model has relationships? Try it:
+#### Your model has relationships? Try it:
 ```php
 //Make your query using eloquent orm normally
 $Employe = Employe::join('supervisors', 'supervisors.id','=','employees.supervisor_id');
@@ -135,7 +135,7 @@ $Grid->fields([
 //Continue code...
 //Easier than that? :)
 ```
-####Mutators
+#### Mutators
 All mutators *get* of the principal table will work normally when the renderer called. For personalize or trait an line before show, for make an visual concatenate or formatter, you can use the ```processLine``` method:
 ```php
 $Grid->fields([
@@ -172,19 +172,19 @@ $Grid->fields([
 //Awesome!
 ```
 
-##Extra Configurations
+## Extra Configurations
 After you publish the our service provider, will apear in your config folder a file named ```rafwell-simplegrid.php```. In him, you can change the standard of date and datetime fields of advanced search, the initial value of 'showing x rows per page' and more!
 
-##Language
+## Language
 This package is multi-language. We use the location of you laravel instalattion, configured in your ```config/app.php```. If we have the translation this will be automatically loaded. 
 You can see the currently supported languages in our [lang folder](resources/lang).
 
-##Disclaimer
+## Disclaimer
 This repository is new, 'forked' from [rafwell/laravel-grid](https://github.com/rafwell/laravel-grid). The original repository does not contemple multi-language features. It has been discontinued in favor of this.
 
-##Contribute
+## Contribute
 If you want contribute, you can open issues to discussion.
 
-##License
+## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
