@@ -80,7 +80,8 @@ class Grid{
 				$v['alias_after_query_executed'] = $k;
 			}
 
-			$v['show'] = true;			
+			if(!isset($v['show']))
+				$v['show'] = true;			
 
 			$this->selectFields[$k] = $k;
 		}				

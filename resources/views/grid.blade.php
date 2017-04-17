@@ -90,14 +90,16 @@
 							<input type="checkbox" class="select-all">
 						</th>
 					@endif					
-					@foreach ($fields as $k=>$v)							
+					@foreach ($fields as $k=>$v)	
+						@if($v['show'])
 						<th class="{!!$k.' '.$v['alias']!!}">
 							<div class="arrows">
 								<a href="{{$urlOrder}}&order={!!$k!!}&direction=asc" title="@lang('Simplegrid::grid.Order ascending')" class="arrow-up"></a>
 								<a href="{{$urlOrder}}&order={!!$k!!}&direction=desc" title="@lang('Simplegrid::grid.Order descending')" class="arrow-down"></a>
 							</div>
 							<span>{{$v['label']}}</span>
-						</th>					
+						</th>	
+						@endif				
 					@endforeach
 					@if (isset($actions))
 						<th class="actions">@lang('Simplegrid::grid.Actions')</th>
@@ -113,10 +115,12 @@
 									<input class="grid-checkbox" type="checkbox" name="grid_checkbox_{!!$checkbox['field']!!}" value="{!!$row[$checkbox['field']]!!}"/>
 								</td>
 							@endif
-							@foreach ($fields as $k=>$v)																
+							@foreach ($fields as $k=>$v)	
+								@if($v['show'])															
 								<td class="field {!!$v['alias']!!}">									
 									{!!$row[$v['alias_after_query_executed']]!!}
 								</td>
+								@endif
 							@endforeach
 							@if (isset($actions))
 								<td class="actions">
