@@ -67,9 +67,9 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 
 					if($value!=='' && $advancedSearchFields[$field]['where']===false){	
 						if(is_string($advancedSearchFields[$field]) || $advancedSearchFields[$field]['type']=='text')
-							$this->model->where(DB::raw($fieldSearched), 'like', '%'.$value.'%');
+							$this->model->where(DB::raw('('.$fieldSearched.')'), 'like', '%'.$value.'%');
 						else									
-							$this->model->where(DB::raw($fieldSearched), $value);
+							$this->model->where(DB::raw('('.$fieldSearched.')'), $value);
 					}
 					$valueProcessed = $value;
 				}else{
@@ -107,13 +107,13 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 					if(isset($value['from']) && $value['from']!==''){
 						$this->searchedValue[$field.'_from'] = $valueAux;
 						if($advancedSearchFields[$field]['where']===false)
-							$this->model->where(DB::raw($fieldSearched), '>=', $valueProcessed);
+							$this->model->where(DB::raw('('.$fieldSearched.')'), '>=', $valueProcessed);
 					}
 					
 					if(isset($value['to']) && $value['to']!==''){
 						$this->searchedValue[$field.'_to'] = $valueAux;
 						if($advancedSearchFields[$field]['where']===false)
-							$this->model->where(DB::raw($fieldSearched), '<=', $valueProcessed);
+							$this->model->where(DB::raw('('.$fieldSearched.')'), '<=', $valueProcessed);
 					}
 				}	
 
