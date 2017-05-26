@@ -173,7 +173,7 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 		$where = '';
 		
 		foreach($this->fieldsForSelect as $field){			
-			$where.=",COALESCE({$field['field']}, '')";
+			$where.=",COALESCE(({$field['field']}), '')";
 		}
 
 		if($where)
