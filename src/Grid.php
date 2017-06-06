@@ -129,7 +129,8 @@ class Grid{
 			'icon'=>false,
 			'onlyIcon'=>false,
 			'method'=>'GET',
-			'confirm'=>false
+			'confirm'=>false,
+			'target'=>'_self'
 		];
 
 		$options = array_merge($defaultOptions, $options);

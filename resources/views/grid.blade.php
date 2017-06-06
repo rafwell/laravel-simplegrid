@@ -126,7 +126,7 @@
 								<td class="actions">
 									@foreach ($row['gridActions'] as $action)	
 										@if($action['method']=='GET')								
-											<a href="{!!$action['url']!!}" title="{{$action['title']}}" class="btn btn-xs action btn-default">
+											<a href="{!!$action['url']!!}" title="{{$action['title']}}" class="btn btn-xs action btn-default" target="{{$action['target']}}">
 												@if (isset($action['icone']))
 													<span class="{{$action['icone']}}"></span>
 												@endif
