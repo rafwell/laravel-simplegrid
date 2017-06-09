@@ -34,16 +34,7 @@ class SimplegridServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        /*
-         * Register the service provider for the dependency.
-         */
-        $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
-        /*
-         * Create aliases for the dependency.
-         */
-        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-        $loader->alias('Excel', 'Maatwebsite\Excel\Facades\Excel');        
-    
+        
     }
 
     /**

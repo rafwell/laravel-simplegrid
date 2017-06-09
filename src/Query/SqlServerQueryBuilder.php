@@ -21,19 +21,19 @@ class SqlServerQueryBuilder extends DefaultQueryBuilder implements QueryBuilderC
 		$fieldsForSelect = [];		
 
 		foreach($this->fieldsForSelect as $k=>$v){
-			if(!is_array($v)) dd($this->fieldsForSelect);
+			if(!is_array($v)) dd($this->fieldsForSelect);		
 
 			if(strpos($v['field'], ' ')!==false){
 				$v['field'] = '('.$v['field'].')';
 			}
 			if($v['field'] <> $v['alias']){
-				$this->fieldsForSelect[$k] = $v['field'].' as '.$v['alias'];				
+				$fieldsForSelect[$k] = $v['field'].' as '.$v['alias'];				
 			}
 			else 
-				$this->fieldsForSelect[$k] = $v['field'];
+				$fieldsForSelect[$k] = $v['field'];
 
 			if($hydrate)
-				$fieldsForSelect[$k] = DB::raw($this->fieldsForSelect[$k]);
+				$fieldsForSelect[$k] = DB::raw($fieldsForSelect[$k]);
 		}
 
 		return $fieldsForSelect;

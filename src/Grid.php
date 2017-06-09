@@ -2,10 +2,13 @@
 namespace Rafwell\Simplegrid;
 use Rafwell\Simplegrid\Query\QueryBuilder;
 use Illuminate\Http\Request;
-use DB;
 use Rafwell\Grid\Helpers;
 use Carbon\Carbon;
+use Box\Spout\Writer\WriterFactory;
+use Box\Spout\Common\Type;
+use Response;
 use View;
+use DB;
 use Exception;
 
 class Grid{
@@ -350,33 +353,82 @@ class Grid{
 
 		if(!$this->export || ($this->export && ($this->Request->get('export')!='xls' && $this->Request->get('export')!='csv'))){
 			$this->queryBuilder->paginate($this->currentRowsPerPage, $this->currentPage);
+			$rows = $this->queryBuilder->performQueryAndGetRows();
 		}
 
-		//execute builded query
-		
-		$rows = $this->queryBuilder->performQueryAndGetRows();		
-
 		if($this->export && ($this->Request->get('export')=='xls' || $this->Request->get('export')=='csv')){
-			array_unshift($rows, $this->fields);
-			$excel = \App::make('excel');
+			@ini_set('max_execution_time', 0);
+			$rows = [];
+			$rowsPerPageExport = 10000;
+			$totalPagesExport = ceil($this->totalRows/$rowsPerPageExport); //itens per query
 
-			$excel->create($this->id.' - '.Carbon::now(), function($excel) use($rows) {				
-			    $excel->sheet('Sheetname', function($sheet) use($rows){
-			    	for($i=0; $i<count($rows); $i++){
-			    		if($i===0){
-			    			$cabecalho = [];
-			    			foreach($rows[$i] as $k=>$v){
-			    				$cabecalho[] = $v['label'];
-			    			}
-			    			$sheet->appendRow($cabecalho);
-			    		}else{			    			
-			    			$sheet->appendRow($rows[$i]);
-			    		}
-					}			        
-			    });
+			$filePath = tempnam(sys_get_temp_dir(), 'simplegrid-export');
 
-			})->download( $this->Request->get('export') );
+			switch ($this->Request->get('export')) {
+				case 'xls':
+					$writer = WriterFactory::create(Type::XLSX);
+					$fileName = $this->id.'-export-'.date('Y-m-d-H:i:s').'.xlsx';
+				break;
+				case 'csv':
+					$writer = WriterFactory::create(Type::CSV);
+					$fileName = $this->id.'-export-'.date('Y-m-d-H:i:s').'.csv';
+				break;
+				default:
+					throw new Exception('Export method not allowed.');					
+				break;
+			}
+			
+			$writer->openToFile($filePath);
+			
+			$fieldsNamesAfterQuery = array_flip(collect($this->fields)->pluck('alias_after_query_executed')->toArray());
 
+			for($i = 1; $i<=$totalPagesExport; $i++){				
+				$this->queryBuilder->paginate($rowsPerPageExport, $i);
+				$rows = $this->queryBuilder->performQueryAndGetRows();				
+				
+
+				if($i===1){
+					$header = [];
+					$rowsHeader = [$rows[0]];
+					array_unshift($rowsHeader, $this->fields);
+	    			foreach($rowsHeader[0] as $field=>$value){
+	    				$header[] = $this->fields[$field]['label'];
+	    			}
+	    				    			
+	    			$writer->addRow($header);	    			
+	    		}
+
+				foreach($rows as $row){						
+					$row = array_intersect_key($row, $fieldsNamesAfterQuery);
+					$writer->addRow( $row );				
+				}
+			}
+
+			$writer->close();
+
+			//builde response
+			//must be refactored to another layer
+			switch ($this->Request->get('export')) {
+				case 'xls':
+					header('Content-Type: application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');					
+				break;
+				case 'csv':
+					header('Content-Type: text/csv');
+				break;
+			}
+
+			$content = file_get_contents($filePath);
+
+			header('Content-Length: '.strlen( $content ));
+			header('Content-disposition: inline; filename="'.$fileName.'"');
+			header('Cache-Control: public, must-revalidate, max-age=0');
+			header('Pragma: public');
+			header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+			header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+
+			echo $content;
+			
+			die();
 		}
 
 	    $nrLines = count($rows);
