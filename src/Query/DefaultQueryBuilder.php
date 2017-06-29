@@ -139,7 +139,8 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 		if( array_key_exists($field, $this->fieldsForSelect) === false )
 			throw new Exception('Field "'.$field.'" not exists in select.');
 		else{
-			return DB::raw( '('.$this->fieldsForSelect[$field]['field'].')' );
+			$field = strpos($this->fieldsForSelect[$field]['field'], ' ') === false ? $this->fieldsForSelect[$field]['field'] : '('.$this->fieldsForSelect[$field]['field'].')';
+			return DB::raw( $field );
 		}
 	}
 
