@@ -57,14 +57,12 @@ class Grid{
 	}
 
 	public function fields($fields){
-		
-
 		foreach($fields as $k=>&$v){
 			if(is_string($v)){
 				$v = [
 					'label'=>$v,
 					'field'=>$k,
-					'alias'=>$k					
+					'alias'=>$k
 				];
 			}else{
 				if(!isset($v['label']))
@@ -99,8 +97,24 @@ class Grid{
 
 		$this->fields = $fields;
 
+		$this->checkHasDoubleAlias();
+
 		return $this;
-	}	
+	}
+
+	private function checkHasDoubleAlias(){
+		$aliases = [];
+		foreach($this->fields as $field){
+			$fieldAlias = $field['alias'];
+			if(strpos($fieldAlias, '.')!==false)
+				$fieldAlias = substr($fieldAlias, strrpos($fieldAlias, '.')+1);
+
+			if(isset($aliases[$fieldAlias]))
+				throw new Exception('You have double alias on query. The field doubled is "people.name". Please, define the field with another alias. See: https://github.com/rafwell/laravel-simplegrid/issues/2');
+			else
+				$aliases[$fieldAlias] = true;
+		}
+	}
 
 	public function actionFields($fields){
 		$actionFields = $fields;
@@ -133,7 +147,8 @@ class Grid{
 			'onlyIcon'=>false,
 			'method'=>'GET',
 			'confirm'=>false,
-			'target'=>'_self'
+			'target'=>'_self',
+			'attrs'=>[]
 		];
 
 		$options = array_merge($defaultOptions, $options);
@@ -299,6 +314,14 @@ class Grid{
 		}
 	}
 
+	private function translateVariables($string, array $row){
+		foreach($row as $field=>$value){   
+          if($field<>'gridActions' && (is_string($value) || is_numeric($value)))
+            $string = str_replace('{'.$field.'}', $value, $string);
+        }
+		return $string;
+	}
+
 	public function make(){
 		$this->validateFields();
 
@@ -385,7 +408,6 @@ class Grid{
 			for($i = 1; $i<=$totalPagesExport; $i++){				
 				$this->queryBuilder->paginate($rowsPerPageExport, $i);
 				$rows = $this->queryBuilder->performQueryAndGetRows();				
-				
 
 				if($i===1){
 					$header = [];
@@ -439,10 +461,10 @@ class Grid{
 	        foreach($this->actions as $action){
 	          if(strpos($action['url'], '{')!==false){
 	            //Have variable to translate
-	            foreach($rows[$i] as $field=>$value){   
-	              if($field<>'gridActions' && (is_string($value) || is_numeric($value)))
-	                $action['url'] = str_replace('{'.$field.'}', $value, $action['url']);
-	            }           
+	            $action['url'] = $this->translateVariables($action['url'], $rows[$i]);
+	          }
+	          foreach($action['attrs'] as $attr=>$value){	          	
+	          	$action['attrs'][$attr] = $this->translateVariables($value, $rows[$i]);
 	          }
 	          $rows[$i]['gridActions'][$action['title']] = $action;
 	        }
@@ -489,6 +511,7 @@ class Grid{
 	    ]);
 
 	    return $this->view;
-	}	
+	}
+
 
 }

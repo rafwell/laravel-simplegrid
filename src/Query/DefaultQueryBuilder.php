@@ -23,7 +23,7 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 	}
 
 	public function getFieldsForSelect($hydrate = true, $addAlias = true){
-		$fieldsForSelect = [];		
+		$fieldsForSelect = [];
 
 		foreach($this->fieldsForSelect as $k=>$v){
 			if(!is_array($v)) dd($this->fieldsForSelect);
@@ -36,13 +36,12 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 			}
 			else 
 				$this->fieldsForSelect[$k] = $v['field'];
-
+			
 			if($hydrate)
 				$fieldsForSelect[$k] = DB::raw($this->fieldsForSelect[$k]);
 		}
 
 		return $fieldsForSelect;
-
 	}
 
 
@@ -190,7 +189,7 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 		return $countModel->count();
 	}
 
-	public function performQueryAndGetRows(){	
+	public function performQueryAndGetRows(){
 		return $this->model->select( $this->getFieldsForSelect() )->get()->toArray();
 	}	
 }

@@ -134,6 +134,22 @@
 													{{$action['title']}}
 												@endif
 											</a>
+										@elseif($action['method']=='BUTTON')
+											<button 
+											 type="button" title="{{$action['title']}}" 
+											 class="btn btn-xs action btn-default" 
+											 data-csrf="{{csrf_token()}}"
+											 @foreach($action['attrs'] as $attr=>$value)
+											 	{!!$attr!!}="{!!$value!!}"
+											 @endforeach
+											>
+												@if (isset($action['icone']))
+													<span class="{{$action['icone']}}"></span>
+												@endif
+												@if ($action['onlyIcon']===false)
+													{{$action['title']}}
+												@endif
+											</button>
 										@else
 											<form action="{!!$action['url']!!}" method="POST" {!! ($action['confirm']!==false ? 'onsubmit="if(!confirm(\''.addslashes(htmlentities($action['confirm'])).'\')){event.preventDefault; return false;}; "' : '' ); !!} >
 												{{csrf_field()}}
