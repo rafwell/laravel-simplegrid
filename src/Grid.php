@@ -407,7 +407,7 @@ class Grid{
 
 			for($i = 1; $i<=$totalPagesExport; $i++){				
 				$this->queryBuilder->paginate($rowsPerPageExport, $i);
-				$rows = $this->queryBuilder->performQueryAndGetRows();				
+				$rows = $this->queryBuilder->performQueryAndGetRows();		
 
 				if($i===1){
 					$header = [];
@@ -420,8 +420,26 @@ class Grid{
 	    			$writer->addRow($header);	    			
 	    		}
 
-				foreach($rows as $row){						
+	    		if($this->processLineClosure){
+			    	for($i = 0; $i<count($rows); $i++){	 
+			    		$rows[$i] = call_user_func($this->processLineClosure, $rows[$i]);
+			    	}
+			    }
+
+				foreach($rows as $k=>$row){						
 					$row = array_intersect_key($row, $fieldsNamesAfterQuery);
+
+					//Clear html before export
+					$row = array_map('htmlspecialchars_decode', $row);
+					
+					foreach($row as &$column){
+						$column = str_replace("\xA0", ' ', $column);	
+						$column = str_replace('&nbsp;', ' ', $column);							
+					}
+
+					$row = array_map('htmlspecialchars_decode', $row);
+					$row = array_map('strip_tags', $row);
+					
 					$writer->addRow( $row );				
 				}
 			}
