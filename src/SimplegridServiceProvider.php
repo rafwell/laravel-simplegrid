@@ -25,6 +25,11 @@ class SimplegridServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../public' => public_path('vendor/rafwell/simple-grid'),
         ]);
+        
+        //solve bug in translation pluralize
+        //probably are a bug in laravel - https://stackoverflow.com/questions/31775626/why-does-laravels-trans-choice-always-show-the-singular-case
+        if($this->app->getLocale()=='pt-BR')
+            $this->app->setLocale('pt_BR');
     }
 
     /**
