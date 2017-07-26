@@ -430,15 +430,15 @@ class Grid{
 					$row = array_intersect_key($row, $fieldsNamesAfterQuery);
 
 					//Clear html before export
-					$row = array_map('htmlspecialchars_decode', $row);
 					
 					foreach($row as &$column){
 						$column = str_replace("\xA0", ' ', $column);	
 						$column = str_replace('&nbsp;', ' ', $column);							
+						$column = str_replace(['<br>','<br/>'], "\r", $column);		
+						$column = html_entity_decode($column, null, 'UTF-8');					
 					}
-
-					$row = array_map('htmlspecialchars_decode', $row);
-					$row = array_map('strip_tags', $row);
+										
+					$row = array_map('strip_tags', $row);					
 					
 					$writer->addRow( $row );				
 				}
