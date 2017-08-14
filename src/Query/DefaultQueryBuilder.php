@@ -129,6 +129,7 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 	}
 
 	public function sort($sortedField, $direction){
+		$this->model->getQuery()->orders = null;
 		$field = $this->getFieldRaw($sortedField);
 
 		$this->model->orderBy($field, $direction);
