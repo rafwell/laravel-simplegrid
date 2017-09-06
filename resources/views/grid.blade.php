@@ -31,7 +31,7 @@
 		<div class="search simple-search {{isset($searchedValue) && $searchedValue<>'' ? 'searched' : ''}}">		
 			<form action="{{$url}}" method="get">			
 				@foreach($fieldsRequest as $field=>$valor)
-					@if ($field<>'search')
+					@if ($field<>'search' && !is_array($valor) && !is_object($valor))
 						<input type="hidden" name="{{$field}}" value="{{$valor}}">
 					@endif
 				@endforeach
