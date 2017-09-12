@@ -37,6 +37,7 @@ class Grid{
 	public $showTrashedLines = false;
 	public $defaultOrder = []; //['field', 'direction']	
 	private $allowExport = true;
+	private $allowSearch = true;
 	private $simpleGridConfig;
 	private $queryBuilder;
 
@@ -290,6 +291,11 @@ class Grid{
 		$this->allowExport = $bool;
 		return $this;
 	}
+
+	public function allowSearch($bool){
+		$this->allowSearch = $bool;
+		return $this;
+	}
 	
 	public function export($bool){
 		$this->export = $bool;
@@ -517,6 +523,7 @@ class Grid{
 	      'rowsPerPage'=>$this->rowsPerPage,
 	      'export'=>$this->export,
 	      'allowExport'=>$this->allowExport,
+	      'allowSearch'=>$this->allowSearch,
 	      'url'=>$this->getUrl(),
 	      'urlOrder'=>$this->getUrl('order'),
 	      'urlPreviousPage'=>$this->getUrl('previous-page'),

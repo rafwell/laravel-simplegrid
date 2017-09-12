@@ -187,7 +187,19 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 		$countModel = clone($this->model);
 		$countModel->getQuery()->orders = null;
 
-		return $countModel->count();
+		if(count($countModel->getQuery()->groups) > 0 ){
+			//when has group by need count over an sub query
+			$db = DB::table(DB::raw("({$countModel->getQuery()->toSql()}) as sub"));
+
+			if($connection = $countModel->getModel()->getConnectionName())
+				$db->connection($connection);
+
+			$db->mergeBindings($countModel->getQuery());
+
+			return $db->count();
+		}else{
+			return $countModel->getQuery()->count();
+		}
 	}
 
 	public function performQueryAndGetRows(){

@@ -27,7 +27,7 @@
 				</fieldset>
 			</form>
 		</div>
-	@else
+	@elseif($allowSearch)
 		<div class="search simple-search {{isset($searchedValue) && $searchedValue<>'' ? 'searched' : ''}}">		
 			<form action="{{$url}}" method="get">			
 				@foreach($fieldsRequest as $field=>$valor)
