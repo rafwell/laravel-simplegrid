@@ -189,7 +189,7 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 
 		if(count($countModel->getQuery()->groups) > 0 ){
 			//when has group by need count over an sub query
-			$db = DB::table(DB::raw("({$countModel->getQuery()->toSql()}) as sub"));
+			$db = DB::table(DB::raw("({$countModel->toSql()}) as sub"));
 
 			if($connection = $countModel->getModel()->getConnectionName())
 				$db->connection($connection);
@@ -197,8 +197,8 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 			$db->mergeBindings($countModel->getQuery());
 
 			return $db->count();
-		}else{
-			return $countModel->getQuery()->count();
+		}else{			
+			return $countModel->count();
 		}
 	}
 
