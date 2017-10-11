@@ -111,7 +111,7 @@ class Grid{
 				$fieldAlias = substr($fieldAlias, strrpos($fieldAlias, '.')+1);
 
 			if(isset($aliases[$fieldAlias]))
-				throw new Exception('You have double alias on query. The field doubled is "people.name". Please, define the field with another alias. See: https://github.com/rafwell/laravel-simplegrid/issues/2');
+				throw new Exception('You have double alias on query. The field doubled is "'.$fieldAlias.'". Please, define the field with another alias. See: https://github.com/rafwell/laravel-simplegrid/issues/2');
 			else
 				$aliases[$fieldAlias] = true;
 		}
@@ -314,7 +314,7 @@ class Grid{
 
 	public function validateFields(){
 		foreach($this->advancedSearchFields as $field=>$opts){
-			if(!isset( $this->fields[$field] ) && !isset($this->actionFields[$field]))
+			if(!isset( $this->fields[$field] ) && !isset($this->actionFields[$field]) && !is_callable($opts['where']))
 				throw new Exception('The field "'.$field.'" in advancedSearch must exists in fields or actionFields array');
 				
 		}

@@ -58,8 +58,12 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 	public function performAdvancedSearch(array $search, array $advancedSearchFields, array $advancedSearchOptions){
 		for($i=0;$i<count($search);$i++){						
 
-			foreach($search[$i] as $field=>$value){				
-				$fieldSearched = $this->fieldsForSelect[$field]['field'];
+			foreach($search[$i] as $field=>$value){	
+				if(!is_callable($advancedSearchFields[$field]['where']))
+					$fieldSearched = $this->fieldsForSelect[$field]['field'];	
+				else{					
+					$fieldSearched = '';
+				}
 
 				if(is_string($value)){
 					$this->searchedValue[$field] = $value;
@@ -116,9 +120,9 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 					}
 				}	
 
-				if($advancedSearchFields[$field]['where']){								
+				if(is_callable($advancedSearchFields[$field]['where'])){								
 					//the user will make the where
-					call_user_func($advancedSearchFields[$field]['where'], $this, $this->model, $valueProcessed, $fieldAux);
+					call_user_func($advancedSearchFields[$field]['where'], $this->model, $valueProcessed);
 				}			
 			}
 		}
