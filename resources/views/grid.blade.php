@@ -92,7 +92,7 @@
 					@endif					
 					@foreach ($fields as $k=>$v)	
 						@if($v['show'])
-						<th class="{!!$k.' '.$v['alias']!!}">
+						<th class="{!!$k.' '.str_replace('.', ' ', $v['alias'])!!}">
 							<div class="arrows">
 								<a href="{{$urlOrder}}&order={!!$k!!}&direction=asc" title="@lang('Simplegrid::grid.Order ascending')" class="arrow-up"></a>
 								<a href="{{$urlOrder}}&order={!!$k!!}&direction=desc" title="@lang('Simplegrid::grid.Order descending')" class="arrow-down"></a>
@@ -117,7 +117,7 @@
 							@endif
 							@foreach ($fields as $k=>$v)	
 								@if($v['show'])															
-								<td class="field {!!$v['alias']!!}">									
+								<td class="field {!!str_replace('.', ' ', $v['alias'])!!}">									
 									{!!$row[$v['alias_after_query_executed']]!!}
 								</td>
 								@endif
