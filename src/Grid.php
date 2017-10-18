@@ -135,7 +135,7 @@ class Grid{
 				$this->actionFields[$k] ['alias_after_query_executed'] = $k;
 			}
 
-		}
+		}		
 
 		return $this;
 	}
@@ -322,8 +322,12 @@ class Grid{
 
 	private function translateVariables($string, array $row){
 		foreach($row as $field=>$value){   
-          if($field<>'gridActions' && (is_string($value) || is_numeric($value)))
-            $string = str_replace('{'.$field.'}', $value, $string);
+          	if($field<>'gridActions'){
+          		if(is_string($value) || is_numeric($value))
+            		$string = str_replace('{'.$field.'}', $value, $string);
+            	else
+            		$string = str_replace('{'.$field.'}', '', $string);
+           	}
         }
 		return $string;
 	}
