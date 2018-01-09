@@ -11,9 +11,24 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 	protected $fieldsForSelect = [];
 	protected $model;
 	protected $searchedValue;
+	protected $subqueryMode = false;
 
 	public function __construct(Builder $model){
 		$this->model = $model;
+
+		if(count($this->model->getQuery()->unions)>0){
+			//when has union must do a sub query
+			$db = DB::table(DB::raw("({$this->model->toSql()}) as sub"));
+
+			if($connection = $this->model->getModel()->getConnectionName())
+				$db->connection($connection);
+
+			$db->mergeBindings($this->model->getQuery());
+
+			$this->model = $db;
+
+			$this->subqueryMode = true;
+		}		
 	}
 
 	public function setFieldsForSelect(array $fields){
@@ -132,8 +147,12 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 		return $this->searchedValue;
 	}
 
+	public function getModelQuery($model){
+		return $this->subqueryMode ? $model : $model->getQuery();
+	}
+
 	public function sort($sortedField, $direction){
-		$this->model->getQuery()->orders = null;
+		$this->getModelQuery($this->model)->orders = null;
 		$field = $this->getFieldRaw($sortedField);
 
 		$this->model->orderBy($field, $direction);
@@ -189,16 +208,17 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 
 	public function getTotalRows(){		
 		$countModel = clone($this->model);
-		$countModel->getQuery()->orders = null;
+		$this->getModelQuery($countModel);
+		$this->getModelQuery($countModel)->orders = null;
 
-		if(count($countModel->getQuery()->groups) > 0 ){
+		if(count($this->getModelQuery($countModel)->groups) > 0 ){
 			//when has group by need count over an sub query
 			$db = DB::table(DB::raw("({$countModel->toSql()}) as sub"));
 
 			if($connection = $countModel->getModel()->getConnectionName())
 				$db->connection($connection);
 
-			$db->mergeBindings($countModel->getQuery());
+			$db->mergeBindings($this->getModelQuery($countModel));
 
 			return $db->count();
 		}else{			
@@ -207,6 +227,9 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 	}
 
 	public function performQueryAndGetRows(){
-		return $this->model->select( $this->getFieldsForSelect() )->get()->toArray();
+		$data = $this->model->select( $this->getFieldsForSelect() )->get()->toArray();
+		if($this->subqueryMode)
+			$data = collect($data)->map(function($x){ return (array) $x; })->toArray(); 
+		return $data;
 	}	
 }
