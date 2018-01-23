@@ -26,7 +26,7 @@ class Grid{
 	public $searchFields;	
 	public $fieldsWhereSearch;
 	public $checkbox = ['show'=>false, 'field'=>false];
-	public $bulkActions;
+	public $bulkActions;	
 	public $advancedSearch = false;
 	public $advancedSearchOpened = false;
 	public $advancedSearchFields = [];
@@ -54,6 +54,9 @@ class Grid{
 		$this->queryBuilder = (new QueryBuilder($query))->getBuilder();
 		$this->id = $id;				
 		$this->Request = Request::capture();		
+
+
+
 		return $this;
 	}
 
@@ -296,6 +299,11 @@ class Grid{
 		$this->allowSearch = $bool;
 		return $this;
 	}
+
+	public function advancedSearchOpened($bool){
+		$this->advancedSearchOpened = $bool;
+		return $this;
+	}
 	
 	public function export($bool){
 		$this->export = $bool;
@@ -505,7 +513,11 @@ class Grid{
 	    	}
 	    }	    
 
-	    //make	    
+	    //make	  
+
+	    if($this->advancedSearch && !$this->allowSearch){
+	    	$this->advancedSearchOpened = true;
+	    }
 	    
 	    $this->view = View::make('Simplegrid::grid', [
 	      'rows'=>$rows,

@@ -213,7 +213,7 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 
 		if(count($this->getModelQuery($countModel)->groups) > 0 ){
 			//when has group by need count over an sub query
-			$db = DB::table(DB::raw("({$countModel->toSql()}) as sub"));
+			$db = DB::table(DB::raw("({$countModel->selectRaw('1')->toSql()}) as sub"));
 
 			if($connection = $countModel->getModel()->getConnectionName())
 				$db->connection($connection);

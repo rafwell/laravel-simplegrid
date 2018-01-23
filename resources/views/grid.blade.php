@@ -14,7 +14,9 @@
 					<button class="btn-submit-advanced-search btn btn-default" type="submit" title="@lang('Simplegrid::grid.Search')">
 						<span class="glyphicon glyphicon-search"> </span> @lang('Simplegrid::grid.Search')
 					</button>
-					<a href="{{$urlSimpleSearch}}" class="btn btn-default" title="@lang('Simplegrid::grid.Simple Search')"><span class="glyphicon glyphicon-zoom-out"></span></a>
+					@if($allowSearch)
+						<a href="{{$urlSimpleSearch}}" class="btn btn-default" title="@lang('Simplegrid::grid.Simple Search')"><span class="glyphicon glyphicon-zoom-out"></span></a>
+					@endif
 					@if ($totalRows>0)
 						<span class="total-info pull-right">
 							{{trans_choice('Simplegrid::grid.Page :current_page of :total_pages. Total of :total_rows row.', $totalRows, [
