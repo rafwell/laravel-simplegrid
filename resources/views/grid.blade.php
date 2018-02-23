@@ -129,8 +129,8 @@
 									@foreach ($row['gridActions'] as $action)	
 										@if($action['method']=='GET')								
 											<a href="{!!$action['url']!!}" title="{{$action['title']}}" class="btn btn-xs action btn-default" target="{{$action['target']}}">
-												@if (isset($action['icone']))
-													<span class="{{$action['icone']}}"></span>
+												@if (isset($action['icon']))
+													<span class="{{$action['icon']}}"></span>
 												@endif
 												@if ($action['onlyIcon']===false)
 													{{$action['title']}}
@@ -145,8 +145,8 @@
 											 	{!!$attr!!}="{!!$value!!}"
 											 @endforeach
 											>
-												@if (isset($action['icone']))
-													<span class="{{$action['icone']}}"></span>
+												@if (isset($action['icon']))
+													<span class="{{$action['icon']}}"></span>
 												@endif
 												@if ($action['onlyIcon']===false)
 													{{$action['title']}}
@@ -157,8 +157,8 @@
 												{{csrf_field()}}
 												<input type="hidden" name="_method" value="{!!$action['method']!!}">
 												<button type="submit" title="{{$action['title']}}" class="btn btn-xs action btn-default">
-													@if (isset($action['icone']))
-														<span class="{{$action['icone']}}"></span>
+													@if (isset($action['icon']))
+														<span class="{{$action['icon']}}"></span>
 													@endif
 													@if ($action['onlyIcon']===false)
 														{{$action['title']}}
