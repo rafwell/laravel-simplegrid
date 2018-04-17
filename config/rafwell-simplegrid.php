@@ -26,5 +26,6 @@ return [
 				'processTo'=>['YYYY-MM-DD HH:mm:ss', 'Y-m-d H:i:s']
 			]
 		]
-	]
+	],
+	'paginationType'=>'pills' //select | pills
 ];

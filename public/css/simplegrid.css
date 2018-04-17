@@ -47,6 +47,10 @@
 	float: right;
 }
 
+.grid-container .nav-pagination.pagination-pill{
+	width: auto;
+}
+
 .grid-container .advanced-search .input-group-addon,
 .grid-container .advanced-search .datetimepicker{
 	font-size: 12px;
@@ -102,6 +106,14 @@
 .grid-container .advanced-search form .input-group.integer,
 .grid-container .advanced-search form .input-group.numeric{
 	margin-bottom: 10px;
+}
+
+.grid-container .table-responsive{
+	margin-bottom: 5px;
+}
+
+.grid-container table{
+	margin-bottom: 5px;
 }
 
 .grid-container table .action{
@@ -168,4 +180,7 @@
 
 .grid-container .search.simple-search{
 	width: auto;
+}
+.grid-container ul.pagination{
+	margin: 0px;
 }

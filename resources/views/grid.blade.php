@@ -183,7 +183,7 @@
 	</div>
 	@if (isset($rows) && count($rows)>0)
 	<div class="row">
-		<div class="col-md-{!! $totalPages>1 ? '9' : '12' !!}">	
+		<div class="col-md-{!! $totalPages>1 ? '7' : '12' !!}">	
 			@if($allowExport)
 			<div class="input-group">				
 				<select name="export" class="form-control">
@@ -197,24 +197,10 @@
 			</div>		
 			@endif
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-5">
 			@if ($totalPages>1)
-				<div class="nav-pagination">
-		            <div class="input-group">
-						<a href="{!!$urlPreviousPage!!}" class="direction input-group-addon" title="@lang('Simplegrid::grid.Previous Page')">
-							<span class="glyphicon glyphicon-chevron-left"></span>
-						</a>
-		                <select class="form-control select-page" data-url="{!!$urlPagination!!}">
-		                	@for($i=1; $i<=$totalPages;$i++)
-			                    <option value="{!!$i!!}" {{$i==$currentPage ? 'selected' : ''}} >@lang('Simplegrid::grid.Page') {!!$i!!}</option>
-			                @endfor
-		                </select>
-						<a href="{!!$urlNextPage!!}" class="direction input-group-addon" title="@lang('Simplegrid::grid.Next Page')">
-							<span class="glyphicon glyphicon-chevron-right"></span>
-						</a>	                
-		            </div>
-		        </div>
-			@endif	
+				@include('Simplegrid::pagination-types.'.$simpleGridConfig['paginationType'])
+		    @endif	
 		</div>
 	</div>
 	@endif
