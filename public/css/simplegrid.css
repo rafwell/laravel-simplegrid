@@ -184,3 +184,9 @@
 .grid-container ul.pagination{
 	margin: 0px;
 }
+
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+    background: #e2e7eb !important;
+    border-color: #d8dcdf !important;
+    color: #565555 !important;
+}
