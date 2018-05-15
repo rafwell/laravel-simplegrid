@@ -340,7 +340,7 @@ class Grid{
 		return $string;
 	}
 
-	public function make(){
+	public function make($returnQuery = false){
 		$this->validateFields();
 
 		//process all fields needed to run this grid
@@ -393,6 +393,9 @@ class Grid{
 			$this->currentPage = $this->totalPages;		
 
 		if(!$this->export || ($this->export && ($this->Request->get('export')!='xls' && $this->Request->get('export')!='csv'))){
+			if($returnQuery)
+				return $this->queryBuilder->buildQueryForGet();
+				
 			$this->queryBuilder->paginate($this->currentRowsPerPage, $this->currentPage);
 			$rows = $this->queryBuilder->performQueryAndGetRows();
 		}
@@ -422,7 +425,7 @@ class Grid{
 			$writer->openToFile($filePath);
 			
 			$fieldsNamesAfterQuery = array_flip(collect($this->fields)->pluck('alias_after_query_executed')->toArray());
-
+			
 			for($i = 1; $i<=$totalPagesExport; $i++){				
 				$this->queryBuilder->paginate($rowsPerPageExport, $i);
 				$rows = $this->queryBuilder->performQueryAndGetRows();		

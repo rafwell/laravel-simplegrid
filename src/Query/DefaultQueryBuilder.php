@@ -226,8 +226,12 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 		}
 	}
 
+	public function buildQueryForGet(){
+		return $this->model->select( $this->getFieldsForSelect() );
+	}
+
 	public function performQueryAndGetRows(){
-		$data = $this->model->select( $this->getFieldsForSelect() )->get()->toArray();
+		$data = $this->buildQueryForGet()->get()->toArray();
 		if($this->subqueryMode)
 			$data = collect($data)->map(function($x){ return (array) $x; })->toArray(); 
 		return $data;
