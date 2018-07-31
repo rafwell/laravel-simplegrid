@@ -38,7 +38,7 @@
         @endphp
         @for($i; $i<=$endPage;$i++)
             <li class="page-item {!!$i==$currentPage ? 'active': ''!!}">
-                <a class="page-link" href="{{$urlRowsPerPage}}&page={!!$i!!}">{!!$i!!}</a>
+                <a class="page-link" href="{{$urlPagination}}&page={!!$i!!}">{!!$i!!}</a>
             </li>
         @endfor
         <li class="page-item">
