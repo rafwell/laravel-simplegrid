@@ -16,7 +16,7 @@ return [
 	'No results found.'=>'Nessun risultato trovato.',
 	'Select an option to export'=>'Seleziona un\'opzione da esportare',
 	'Select a format for export!'=>'Seleziona un formato da esportare!',
-	'Export'=>'esportazione',
+	'Export'=>'Esportare',
 	'Previous Page'=>'Pagina precedente',
 	'Next Page'=>'Pagina successiva',
 	'Page'=>'Pagina',
