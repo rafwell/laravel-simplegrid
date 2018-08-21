@@ -15,8 +15,8 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 
 	public function __construct(Builder $model){
 		$this->model = $model;
-
-		if(count($this->model->getQuery()->unions)>0){
+		
+		if($this->model->getQuery()->unions){
 			//when has union must do a sub query
 			$db = DB::table(DB::raw("({$this->model->toSql()}) as sub"));
 
@@ -211,7 +211,7 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 		$this->getModelQuery($countModel);
 		$this->getModelQuery($countModel)->orders = null;
 
-		if(count($this->getModelQuery($countModel)->groups) > 0 ){
+		if($this->getModelQuery($countModel)->groups){
 			//when has group by need count over an sub query
 			$db = DB::table(DB::raw("({$countModel->selectRaw('1')->toSql()}) as sub"));
 
