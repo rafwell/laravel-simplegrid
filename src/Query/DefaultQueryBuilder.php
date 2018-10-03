@@ -65,7 +65,7 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 	}
 
 	public function performSimpleSearch($search){
-		$this->searchedValue = $search;
+		$this->searchedValue = trim($search);
 		$fields = $this->getSimpleSearchConcatenatedFields();		
 		$this->model->where(DB::raw($fields), 'like', '%'.$search.'%');
 	}
@@ -74,6 +74,7 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 		for($i=0;$i<count($search);$i++){						
 
 			foreach($search[$i] as $field=>$value){	
+				$value = trim($value);
 				if(!is_callable($advancedSearchFields[$field]['where']))
 					$fieldSearched = $this->fieldsForSelect[$field]['field'];	
 				else{					
