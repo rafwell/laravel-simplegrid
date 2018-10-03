@@ -74,7 +74,6 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 		for($i=0;$i<count($search);$i++){						
 
 			foreach($search[$i] as $field=>$value){	
-				$value = trim($value);
 				if(!is_callable($advancedSearchFields[$field]['where']))
 					$fieldSearched = $this->fieldsForSelect[$field]['field'];	
 				else{					
@@ -82,6 +81,7 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 				}
 
 				if(is_string($value)){
+					$value = trim($value);
 					$this->searchedValue[$field] = $value;
 
 					if($value!=='' && $advancedSearchFields[$field]['where']===false){	
@@ -122,6 +122,8 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 							$valueProcessed = (float) $valueAux;
 						break;
 					}
+
+					$valueProcessed = trim($valueProcessed);
 
 					if(isset($value['from']) && $value['from']!==''){
 						$this->searchedValue[$field.'_from'] = $valueAux;
