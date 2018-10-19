@@ -27,8 +27,11 @@ $(document).ready(function(){
     $('.grid-container .bulk-action select').change(function(){
         if($(this).val()){
             if($(this).closest('.grid-container').find('table tbody input[type="checkbox"].grid-checkbox:checked').length>0){
-                if(confirm($(this).attr('data-confirm-msg'))){
+                var confirmMsg = $('.grid-container .bulk-action select option:selected').attr('data-confirm-msg');
+                var method = $('.grid-container .bulk-action select option:selected').attr('data-method');
+                if(confirm(confirmMsg)){
                     var $form = $('<form></form>').attr('id', 'grid-form-bulk-actions').attr('action', $(this).val()).attr('method', 'post');
+                    $form.append('<input type="hidden" name="_method" value="'+method+'" />');
                     $form.append('<input type="hidden" name="_token" value="'+$(this).attr('data-token')+'" />');
                     $form.append('<input type="hidden" name="acao" value="'+$(this).find('option:selected').text()+'" />');
                     $(this).closest('.grid-container').find('table tbody input[type="checkbox"].grid-checkbox:checked').each(function(){

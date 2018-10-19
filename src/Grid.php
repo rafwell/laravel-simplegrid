@@ -156,17 +156,27 @@ class Grid{
 		];
 
 		$options = array_merge($defaultOptions, $options);
-
+		
 		$this->actions[$title] = $options;
 
 		return $this;
 	}
 
-	public function bulkAction($title, $url){
-		$this->bulkActions[$title] = [
+	public function bulkAction($title, $url, $options = []){
+
+		$defaultOptions = [
 			'title'=>$title,
-			'url'=>$url
+			'url'=>$url,
+			'method'=>'POST',
+			'confirm'=>trans('Simplegrid::grid.Do you really want to apply this action to the selected items?'),
+			'target'=>'_self',
+			'attrs'=>[]
 		];
+
+		$options = array_merge($defaultOptions, $options);
+
+		$this->bulkActions[$title] = $options;
+
 		return $this;
 	}
 

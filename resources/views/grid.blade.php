@@ -65,7 +65,16 @@
 				<select name="grid_bulk_action" class="grid_bulk_action" data-token="{{ csrf_token() }}" data-confirm-msg="@lang('Simplegrid::grid.Do you really want to apply this action to the selected items?')" data-alert-msg="@lang('Simplegrid::grid.Select at least one item to apply the action!')">
 					<option value="">@lang('Simplegrid::grid.Apply to selected')</option>
 					@foreach($bulkActions as $action)
-					<option value="{{$action['url']}}">{!!$action['title']!!}</option>
+					<option 
+						value="{{$action['url']}}"
+						data-confirm-msg="{{$action['confirm']}}"
+						data-method="{{$action['method']}}"
+						@foreach($action['attrs'] as $attr=>$value)
+							{!!$attr!!}="{!!$value!!}"
+						@endforeach
+					>
+						{!!$action['title']!!}
+					</option>
 					@endforeach
 				</select>		
 			</div>
