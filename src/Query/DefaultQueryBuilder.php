@@ -101,6 +101,8 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 					else
 						$valueAux = '';
 
+					$valueProcessed = '';
+
 					switch ($advancedSearchFields[$field]['type']) {
 						case 'date':
 						case 'datetime':
@@ -122,8 +124,11 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 						case 'decimal':										
 							$valueProcessed = (float) $valueAux;
 						break;
+						default:
+							$valueProcessed = $valueAux;
+						break;
 					}
-
+					
 					$valueProcessed = trim($valueProcessed);
 
 					if(isset($value['from']) && $value['from']!==''){
