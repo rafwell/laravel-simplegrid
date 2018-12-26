@@ -144,6 +144,7 @@
 												@if ($action['onlyIcon']===false)
 													{{$action['title']}}
 												@endif
+												{!!$action['append']!!}
 											</a>
 										@elseif($action['method']=='BUTTON')
 											<button 
@@ -160,6 +161,7 @@
 												@if ($action['onlyIcon']===false)
 													{{$action['title']}}
 												@endif
+												{!!$action['append']!!}
 											</button>
 										@else
 											<form action="{!!$action['url']!!}" method="POST" {!! ($action['confirm']!==false ? 'onsubmit="if(!confirm(\''.addslashes(htmlentities($action['confirm'])).'\')){event.preventDefault; return false;}; "' : '' ); !!} >
@@ -172,6 +174,7 @@
 													@if ($action['onlyIcon']===false)
 														{{$action['title']}}
 													@endif
+													{!!$action['append']!!}
 												</button>
 											</form>
 										@endif

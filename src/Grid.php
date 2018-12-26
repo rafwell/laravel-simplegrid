@@ -152,6 +152,7 @@ class Grid{
 			'method'=>'GET',
 			'confirm'=>false,
 			'target'=>'_self',
+			'append'=>'',
 			'attrs'=>[]
 		];
 
@@ -511,10 +512,17 @@ class Grid{
 	          if(strpos($action['url'], '{')!==false){
 	            //Have variable to translate
 	            $action['url'] = $this->translateVariables($action['url'], $rows[$i]);
-	          }
+			  }
+			  
+			  if(strpos($action['append'], '{')!==false){
+	            //Have variable to translate
+	            $action['append'] = $this->translateVariables($action['append'], $rows[$i]);
+			  }
+			  
 	          foreach($action['attrs'] as $attr=>$value){	          	
 	          	$action['attrs'][$attr] = $this->translateVariables($value, $rows[$i]);
-	          }
+			  }
+			  
 	          $rows[$i]['gridActions'][$action['title']] = $action;
 	        }
 	      }
