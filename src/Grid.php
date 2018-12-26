@@ -153,6 +153,7 @@ class Grid{
 			'confirm'=>false,
 			'target'=>'_self',
 			'append'=>'',
+			'next'=>'',
 			'attrs'=>[]
 		];
 
@@ -515,8 +516,11 @@ class Grid{
 			  }
 			  
 			  if(strpos($action['append'], '{')!==false){
-	            //Have variable to translate
 	            $action['append'] = $this->translateVariables($action['append'], $rows[$i]);
+			  }
+
+			  if(strpos($action['next'], '{')!==false){
+	            $action['next'] = $this->translateVariables($action['next'], $rows[$i]);
 			  }
 			  
 	          foreach($action['attrs'] as $attr=>$value){	          	

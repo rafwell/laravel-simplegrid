@@ -178,6 +178,7 @@
 												</button>
 											</form>
 										@endif
+										{!!$action['next']!!}
 									@endforeach
 								</td>
 							@endif
