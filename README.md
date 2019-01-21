@@ -1,5 +1,5 @@
 ## About this project
-**rafwell/laravel-simplegrid** is a component for build powerful grids, with less code. The component is ready to work with Bootstrap 3, have features to export to xls/csv, simple/advanced search, ordenation, actions inline or bulk.
+**rafwell/laravel-simplegrid** is a component for build powerful grids, with less code. The component is ready to work with Bootstrap 3, have features to export to xls, csv and pdf, simple/advanced search, ordenation, actions inline or bulk.
 
 ## Demo
 In this link you can see an demo application: [https://laravel-simple-grid.herokuapp.com/](https://laravel-simple-grid.herokuapp.com/)
