@@ -10,6 +10,8 @@ use Response;
 use View;
 use DB;
 use Exception;
+use Rafwell\Simplegrid\Export\Excel;
+use Rafwell\Simplegrid\Export\Pdf;
 
 class Grid{
 	private $view;	
@@ -36,10 +38,10 @@ class Grid{
 	public $export = true;
 	public $showTrashedLines = false;
 	public $defaultOrder = []; //['field', 'direction']	
-	private $allowExport = true;
-	private $allowSearch = true;
-	private $simpleGridConfig;
-	private $queryBuilder;
+	protected $allowExport = true;
+	protected $allowSearch = true;
+	public $simpleGridConfig;
+	public $queryBuilder;
 
 	function __construct($query, $id, $config = []){		
 		//merge the configurations
@@ -404,104 +406,44 @@ class Grid{
 		if($this->currentPage>$this->totalPages)
 			$this->currentPage = $this->totalPages;		
 
-		if(!$this->export || ($this->export && ($this->Request->get('export')!='xls' && $this->Request->get('export')!='csv'))){
+		if(!$this->Request->get('export')){
 			if($returnQuery)
 				return $this->queryBuilder->buildQueryForGet();
 				
 			$this->queryBuilder->paginate($this->currentRowsPerPage, $this->currentPage);
 			$rows = $this->queryBuilder->performQueryAndGetRows();
-		}
-
-		if($this->export && ($this->Request->get('export')=='xls' || $this->Request->get('export')=='csv')){
+		}else
+		if($this->export && $this->Request->get('export')){
+			if(!$this->simpleGridConfig['allowExport'])
+				throw new Exception('Export is not enabled.');
+			
 			@ini_set('max_execution_time', 0);
-			$rows = [];
-			$rowsPerPageExport = 10000;
-			$totalPagesExport = ceil($this->totalRows/$rowsPerPageExport); //itens per query
-
-			$filePath = tempnam(sys_get_temp_dir(), 'simplegrid-export');
-
+			
 			switch ($this->Request->get('export')) {
 				case 'xls':
-					$writer = WriterFactory::create(Type::XLSX);
-					$fileName = $this->id.'-export-'.date('Y-m-d-H:i:s').'.xlsx';
-				break;
 				case 'csv':
-					$writer = WriterFactory::create(Type::CSV);
-					$fileName = $this->id.'-export-'.date('Y-m-d-H:i:s').'.csv';
+					$excel = new Excel($this->Request->get('export'), $this);
+					Response::file( $excel->getFilePath(), [
+						'Content-Length'=> strlen( $excel->getFileContent() ),
+						'Content-Type'=> $excel->getContentType(),
+						'Content-disposition'=>'inline; filename="'.$excel->getFileName().'"'
+					])->send();
+				break;
+				case 'pdf':
+					if(!$this->simpleGridConfig['export']['pdf']['enabled'])
+						throw new Exception('PDF Export is not enabled.');
+						
+					$pdf = new Pdf($this);
+					Response::file( $pdf->getFilePath(), [
+						'Content-Type'=> 'application/pdf',
+						'Content-disposition'=>'inline; filename="'.$pdf->getFileName().'"'
+					])->send();	
 				break;
 				default:
 					throw new Exception('Export method not allowed.');					
 				break;
 			}
-			
-			$writer->openToFile($filePath);
-			
-			$fieldsNamesAfterQuery = array_flip(collect($this->fields)->pluck('alias_after_query_executed')->toArray());
-			
-			for($i = 1; $i<=$totalPagesExport; $i++){				
-				$this->queryBuilder->paginate($rowsPerPageExport, $i);
-				$rows = $this->queryBuilder->performQueryAndGetRows();		
 
-				if($i===1){
-					$header = [];
-					$rowsHeader = [$rows[0]];
-					array_unshift($rowsHeader, $this->fields);
-	    			foreach($rowsHeader[0] as $field=>$value){
-	    				$header[] = $this->fields[$field]['label'];
-	    			}
-	    				    			
-	    			$writer->addRow($header);	    			
-	    		}
-
-	    		if($this->processLineClosure){
-			    	for($i = 0; $i<count($rows); $i++){	 
-			    		$rows[$i] = call_user_func($this->processLineClosure, $rows[$i]);
-			    	}
-			    }
-
-				foreach($rows as $k=>$row){						
-					$row = array_intersect_key($row, $fieldsNamesAfterQuery);
-
-					//Clear html before export
-					
-					foreach($row as &$column){
-						$column = str_replace("\xA0", ' ', $column);	
-						$column = str_replace('&nbsp;', ' ', $column);							
-						$column = str_replace(['<br>','<br/>'], "\r", $column);		
-						$column = html_entity_decode($column, null, 'UTF-8');					
-					}
-										
-					$row = array_map('strip_tags', $row);					
-					
-					$writer->addRow( $row );				
-				}
-			}
-
-			$writer->close();
-
-			//builde response
-			//must be refactored to another layer
-			switch ($this->Request->get('export')) {
-				case 'xls':
-					header('Content-Type: application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');					
-				break;
-				case 'csv':
-					header('Content-Type: text/csv');
-				break;
-			}
-
-			$content = file_get_contents($filePath);
-
-			header('Content-Length: '.strlen( $content ));
-			header('Content-disposition: inline; filename="'.$fileName.'"');
-			header('Cache-Control: public, must-revalidate, max-age=0');
-			header('Pragma: public');
-			header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
-			header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-
-			echo $content;
-			
-			die();
 		}
 
 	    $nrLines = count($rows);

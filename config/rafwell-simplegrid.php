@@ -1,6 +1,15 @@
 <?php
 return [
 	'allowExport'=>true, //if true, show the export option, maybe not a good idea for big grids or low server
+	'export'=>[
+		'pdf'=>[
+			'enabled'=>false,
+			'bootstrapCss'=>'',
+			'snappy'=>[
+				'orientation'=>'landscape'
+			]
+		]
+	],
 	'rowsPerPage'=>[10,20,30,50,100,200], //the options to select
 	'currentRowsPerPage'=>10, //the initial value by default - must exists in rowsPerPage
 	'advancedSearch'=>[
@@ -27,5 +36,5 @@ return [
 			]
 		]
 	],
-	'paginationType'=>'pills' //select | pills
+	'paginationType'=>'pills', //select | pills
 ];

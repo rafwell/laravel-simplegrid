@@ -203,6 +203,9 @@
 					<option value="">@lang('Simplegrid::grid.Select an option to export')</option>
 					<option value="xls">XLS</option>
 					<option value="csv">CSV</option>
+					@if($simpleGridConfig['export']['pdf']['enabled'])
+					<option value="pdf">PDF</option>
+					@endif
 				</select>
 				<a href="#" data-href="{{$urlExport}}" target="_blank" class="input-group-addon btn-export" title="@lang('Simplegrid::grid.Export')" data-alert-msg="@lang('Simplegrid::grid.Select a format for export!')">
 					<span class="glyphicon glyphicon-download"></span> @lang('Simplegrid::grid.Export')
