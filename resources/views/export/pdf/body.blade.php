@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 	<head>
-        <link href="{{$bootstrapCss}}" rel="stylesheet" />
+        <link href="{!!asset($bootstrapCss)!!}" rel="stylesheet" />
 		<link href="{!!asset('vendor/rafwell/simple-grid/css/simplegrid.css')!!}" rel="stylesheet" />
 		<meta charset="utf-8" />		
 	</head>

@@ -4,7 +4,7 @@ return [
 	'export'=>[
 		'pdf'=>[
 			'enabled'=>false,
-			'bootstrapCss'=>'',
+			'bootstrapCss'=>'assets/bootstrap/css/bootstrap.min.css',
 			'snappy'=>[
 				'orientation'=>'landscape'
 			]
