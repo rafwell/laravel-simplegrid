@@ -55,7 +55,8 @@ class Pdf{
                     $column = html_entity_decode($column, null, 'UTF-8');					
                 }
                                     
-                $row = array_map('strip_tags', $row);					
+                $row = array_map('strip_tags', $row);		
+                $row = array_map('trim', $row);			
                 
                 $this->rows[] = $row;				
             }
