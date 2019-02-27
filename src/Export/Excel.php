@@ -77,7 +77,7 @@ class Excel{
     public function getContentType(){
         switch ($this->fileExt) {
             case 'xlsx':
-                return 'application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';	
+                return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';	
             break;
             case 'csv':
                 return 'text/csv';

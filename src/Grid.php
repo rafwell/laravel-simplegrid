@@ -443,82 +443,82 @@ class Grid{
 					throw new Exception('Export method not allowed.');					
 				break;
 			}
-
+			die('');
 		}
 
-	    $nrLines = count($rows);
+		$nrLines = count($rows);
 
-	    //translate actions
-	    if(isset($this->actions)){
-	      for($i = 0; $i<$nrLines; $i++){
-	        foreach($this->actions as $action){
-	          if(strpos($action['url'], '{')!==false){
-	            //Have variable to translate
-	            $action['url'] = $this->translateVariables($action['url'], $rows[$i]);
-			  }
-			  
-			  if(strpos($action['append'], '{')!==false){
-	            $action['append'] = $this->translateVariables($action['append'], $rows[$i]);
-			  }
+		//translate actions
+		if(isset($this->actions)){
+			for($i = 0; $i<$nrLines; $i++){
+				foreach($this->actions as $action){
+					if(strpos($action['url'], '{')!==false){
+						//Have variable to translate
+						$action['url'] = $this->translateVariables($action['url'], $rows[$i]);
+			}
+			
+			if(strpos($action['append'], '{')!==false){
+						$action['append'] = $this->translateVariables($action['append'], $rows[$i]);
+			}
 
-			  if(strpos($action['next'], '{')!==false){
-	            $action['next'] = $this->translateVariables($action['next'], $rows[$i]);
-			  }
-			  
-	          foreach($action['attrs'] as $attr=>$value){	          	
-	          	$action['attrs'][$attr] = $this->translateVariables($value, $rows[$i]);
-			  }
-			  
-	          $rows[$i]['gridActions'][$action['title']] = $action;
-	        }
-	      }
-	    }
+			if(strpos($action['next'], '{')!==false){
+						$action['next'] = $this->translateVariables($action['next'], $rows[$i]);
+			}
+			
+					foreach($action['attrs'] as $attr=>$value){	          	
+						$action['attrs'][$attr] = $this->translateVariables($value, $rows[$i]);
+			}
+			
+					$rows[$i]['gridActions'][$action['title']] = $action;
+				}
+			}
+		}
 
-	    if($this->processLineClosure){
-	    	for($i = 0; $i<count($rows); $i++){	 
-	    		$rows[$i] = call_user_func($this->processLineClosure, $rows[$i]);
-	    	}
-	    }	    
+		if($this->processLineClosure){
+			for($i = 0; $i<count($rows); $i++){	 
+				$rows[$i] = call_user_func($this->processLineClosure, $rows[$i]);
+			}
+		}	    
 
-	    //make	  
+		//make	  
 
-	    if($this->advancedSearch && !$this->allowSearch){
-	    	$this->advancedSearchOpened = true;
-	    }
-	    
-	    $this->view = View::make('Simplegrid::grid', [
-	      'rows'=>$rows,
-	      'totalRows'=>$this->totalRows,
-	      'fields'=>$this->fields,
-	      'actions'=>$this->actions,
-	      'currentPage'=>$this->currentPage,	      
-	      'totalPages'=>$this->totalPages,
-	      'id'=>$this->id,	      
-	      'searchedValue'=>$this->queryBuilder->getSearchedValue(),
-	      'fieldsRequest'=>$this->getFieldsRequest(),
-	      'urlPagination'=>$this->getUrl('pagination'),
-	      'checkbox'=>$this->checkbox,
-	      'bulkActions'=>$this->bulkActions,
-	      'advancedSearch'=>$this->advancedSearch,
-	      'advancedSearchOpened'=>$this->advancedSearchOpened,
-	      'advancedSearchFields'=>$this->advancedSearchFields,
-	      'currentRowsPerPage'=>$this->currentRowsPerPage,
-	      'rowsPerPage'=>$this->rowsPerPage,
-	      'export'=>$this->export,
-	      'allowExport'=>$this->allowExport,
-	      'allowSearch'=>$this->allowSearch,
-	      'url'=>$this->getUrl(),
-	      'urlOrder'=>$this->getUrl('order'),
-	      'urlPreviousPage'=>$this->getUrl('previous-page'),
-	      'urlNextPage'=>$this->getUrl('next-page'),	      
-	      'urlAdvancedSearch'=>$this->getUrl('advanced-search'),
-	      'urlSimpleSearch'=>$this->getUrl('simple-search'),
-	      'urlRowsPerPage'=>$this->getUrl('rows-per-page'),
-	      'urlExport'=>$this->getUrl('url-export'),
-	      'simpleGridConfig'=>$this->simpleGridConfig
-	    ]);
+		if($this->advancedSearch && !$this->allowSearch){
+			$this->advancedSearchOpened = true;
+		}
+		
+		$this->view = View::make('Simplegrid::grid', [
+			'rows'=>$rows,
+			'totalRows'=>$this->totalRows,
+			'fields'=>$this->fields,
+			'actions'=>$this->actions,
+			'currentPage'=>$this->currentPage,	      
+			'totalPages'=>$this->totalPages,
+			'id'=>$this->id,	      
+			'searchedValue'=>$this->queryBuilder->getSearchedValue(),
+			'fieldsRequest'=>$this->getFieldsRequest(),
+			'urlPagination'=>$this->getUrl('pagination'),
+			'checkbox'=>$this->checkbox,
+			'bulkActions'=>$this->bulkActions,
+			'advancedSearch'=>$this->advancedSearch,
+			'advancedSearchOpened'=>$this->advancedSearchOpened,
+			'advancedSearchFields'=>$this->advancedSearchFields,
+			'currentRowsPerPage'=>$this->currentRowsPerPage,
+			'rowsPerPage'=>$this->rowsPerPage,
+			'export'=>$this->export,
+			'allowExport'=>$this->allowExport,
+			'allowSearch'=>$this->allowSearch,
+			'url'=>$this->getUrl(),
+			'urlOrder'=>$this->getUrl('order'),
+			'urlPreviousPage'=>$this->getUrl('previous-page'),
+			'urlNextPage'=>$this->getUrl('next-page'),	      
+			'urlAdvancedSearch'=>$this->getUrl('advanced-search'),
+			'urlSimpleSearch'=>$this->getUrl('simple-search'),
+			'urlRowsPerPage'=>$this->getUrl('rows-per-page'),
+			'urlExport'=>$this->getUrl('url-export'),
+			'simpleGridConfig'=>$this->simpleGridConfig
+		]);
 
-	    return $this->view;
+		return $this->view;
 	}
 
 
