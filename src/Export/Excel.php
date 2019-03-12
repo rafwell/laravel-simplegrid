@@ -6,6 +6,7 @@ use Illuminate\View\View;
 use Exception;
 use Box\Spout\Writer\WriterFactory;
 use Box\Spout\Common\Type;
+use Box\Spout\Writer\Style\StyleBuilder;
 
 class Excel{
     protected $writer;
@@ -23,6 +24,10 @@ class Excel{
             $this->fileExt = 'csv';
         }
 
+        $style = (new StyleBuilder())
+           ->setShouldWrapText(false)
+           ->build();
+
         $this->filePath = tempnam(sys_get_temp_dir(), 'simplegrid-export');
         $this->fileName = $grid->id.'-export-'.date('Y-m-d-H:i:s').'.'.$this->fileExt;
         $this->writer->openToFile($this->filePath);
@@ -31,7 +36,7 @@ class Excel{
         $totalPagesExport = ceil($grid->totalRows/$rowsPerPageExport); //itens per query
         
         $fieldsNamesAfterQuery = array_flip(collect($grid->fields)->pluck('alias_after_query_executed')->toArray());
-				
+        
         for($i = 1; $i<=$totalPagesExport; $i++){				
             $grid->queryBuilder->paginate($rowsPerPageExport, $i);
             $rows = $grid->queryBuilder->performQueryAndGetRows();		
@@ -44,7 +49,7 @@ class Excel{
                     $header[] = $grid->fields[$field]['label'];
                 }
                                     
-                $this->writer->addRow($header);	    			
+                $this->writer->addRowWithStyle($header, $style);	   
             }
 
             if($grid->processLineClosure){
@@ -67,7 +72,7 @@ class Excel{
                 $row = array_map('strip_tags', $row);
                 $row = array_map('trim', $row);
                 
-                $this->writer->addRow( $row );				
+                $this->writer->addRowWithStyle( $row, $style );				
             }
         }
        
