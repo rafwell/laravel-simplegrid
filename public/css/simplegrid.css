@@ -134,7 +134,7 @@
     margin-left: 20px;
     display: block;
 }
-.grid table > thead tr th span {
+.grid-container table > thead tr th span {
     line-height: 100%;
     margin-left: 20px;
     min-height: 25px;
