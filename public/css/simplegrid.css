@@ -125,6 +125,23 @@
 	text-align: center;
 }
 
+.grid-container table > thead tr th{
+    vertical-align: middle;
+}
+
+.grid-container table > thead tr th span {
+    line-height: 1;
+    margin-left: 20px;
+    display: block;
+}
+.grid table > thead tr th span {
+    line-height: 100%;
+    margin-left: 20px;
+    min-height: 25px;
+    display: flex;
+    align-items: center;
+}
+
 .grid-container table thead tr th .arrows{
 	vertical-align: middle;
 	margin-left: 0px;
@@ -143,11 +160,12 @@
 	vertical-align: middle;	
 	width: 0; 
 	height: 0; 
-	border-left: 4px solid transparent;
-	border-right: 4px solid transparent;
-	border-bottom: 4px solid #000;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-bottom: 8px solid #333;
 	width: auto;
 	float: left;
+	cursor: pointer;
 }
 
 .grid-container table thead tr th .arrow-down:before {
@@ -157,12 +175,13 @@
 	margin-right: 0px;
 	width: 0;
 	height: 0;
-	border-left: 4px solid transparent;
-	border-right: 4px solid transparent;
-	border-top: 4px solid #000;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-top: 8px solid #333;
 	float: left;
-	margin-left: -8px;
-	margin-top: 6px;
+	margin-left: -16px;
+	margin-top: 12px;
+	cursor: pointer;
 }
 .grid-container .showing-rows-info{
 	margin-bottom: 10px;
@@ -189,4 +208,27 @@
     background: #e2e7eb !important;
     border-color: #d8dcdf !important;
     color: #565555 !important;
+}
+
+.grid-container input[type="checkbox"].grid-checkbox,
+.grid-container input[type="checkbox"].select-all{
+    height: 20px;
+    width: 20px;
+}
+
+@media only screen and (max-width: 769px) {
+    .grid-container .advanced-search .field{
+        width: 50%;
+    }
+
+    .grid-container .advanced-search .field.double{
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .grid-container .advanced-search .field,
+    .grid-container .advanced-search .field.double{
+        width: 100%;
+    }
 }
