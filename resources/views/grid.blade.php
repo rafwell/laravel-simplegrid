@@ -29,23 +29,25 @@
 				</fieldset>
 			</form>
 		</div>
-	@elseif($allowSearch)
+	@else
 		<div class="search simple-search {{isset($searchedValue) && $searchedValue<>'' ? 'searched' : ''}}">		
-			<form action="{{$url}}" method="get">			
-				@foreach($fieldsRequest as $field=>$valor)
-					@if ($field<>'search' && !is_array($valor) && !is_object($valor))
-						<input type="hidden" name="{{$field}}" value="{{$valor}}">
+			@if($allowSearch)
+				<form action="{{$url}}" method="get">			
+					@foreach($fieldsRequest as $field=>$valor)
+						@if ($field<>'search' && !is_array($valor) && !is_object($valor))
+							<input type="hidden" name="{{$field}}" value="{{$valor}}">
+						@endif
+					@endforeach
+					<input type="text" name="search" class="form-control input-search" placeholder="@lang('Simplegrid::grid.Search by...')" value="{{$searchedValue}}">
+					<button class="btn-search btn btn-default" type="submit" title="@lang('Simplegrid::grid.Search')"><span class="glyphicon glyphicon-search"></span></button>		      	
+					@if (isset($searchedValue) && $searchedValue<>'')				      		
+						<button class="btn-clear-search btn btn-default" type="button" title="@lang('Simplegrid::grid.Clear search')"><span class="glyphicon glyphicon-remove"></span></button>
 					@endif
-				@endforeach
-		      	<input type="text" name="search" class="form-control input-search" placeholder="@lang('Simplegrid::grid.Search by...')" value="{{$searchedValue}}">
-		        <button class="btn-search btn btn-default" type="submit" title="@lang('Simplegrid::grid.Search')"><span class="glyphicon glyphicon-search"></span></button>		      	
-		      	@if (isset($searchedValue) && $searchedValue<>'')				      		
-			       	<button class="btn-clear-search btn btn-default" type="button" title="@lang('Simplegrid::grid.Clear search')"><span class="glyphicon glyphicon-remove"></span></button>
-		      	@endif
-		      	@if ($advancedSearch && $advancedSearchOpened === false)
-					<a href="{{$urlAdvancedSearch}}" class="btn-advanced-search btn btn-default" title="@lang('Simplegrid::grid.Advanced Search')"><span class="glyphicon glyphicon-zoom-in"></span></a>
-		      	@endif
-		    </form>
+					@if ($advancedSearch && $advancedSearchOpened === false)
+						<a href="{{$urlAdvancedSearch}}" class="btn-advanced-search btn btn-default" title="@lang('Simplegrid::grid.Advanced Search')"><span class="glyphicon glyphicon-zoom-in"></span></a>
+					@endif
+				</form>
+			@endif
 			@if ($totalRows>0)
 				<span class="total-info">
 					{{trans_choice('Simplegrid::grid.Page :current_page of :total_pages. Total of :total_rows row.', $totalRows, [
