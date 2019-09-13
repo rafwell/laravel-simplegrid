@@ -20,8 +20,10 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 			//when has union must do a sub query
 			$db = DB::table(DB::raw("({$this->model->toSql()}) as sub"));
 
-			if($connection = $this->model->getModel()->getConnectionName())
-				$db->connection($connection);
+			if($connection = $this->model->getModel()->getConnectionName()){
+				if(method_exists($connection, 'connection'))
+					$db->connection($connection);
+			}
 
 			$db->mergeBindings($this->model->getQuery());
 
