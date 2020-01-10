@@ -139,7 +139,15 @@
 								<td class="actions">
 									@foreach ($row['gridActions'] as $action)	
 										@if($action['method']=='GET')								
-											<a href="{!!$action['url']!!}" title="{{$action['title']}}" class="btn btn-xs action btn-default" target="{{$action['target']}}">
+											<a 
+											 href="{!!$action['url']!!}" 
+											 title="{{$action['title']}}" 
+											 class="btn btn-xs action btn-default" 
+											 target="{{$action['target']}}"
+											 @foreach($action['attrs'] as $attr=>$value)
+											 	{!!$attr!!}{!! $value !== true ? '="'.$value.'"' : '' !!}
+											 @endforeach
+											>
 												@if (isset($action['icon']))
 													<span class="{{$action['icon']}}"></span>
 												@endif
@@ -154,7 +162,7 @@
 											 class="btn btn-xs action btn-default" 
 											 data-csrf="{{csrf_token()}}"
 											 @foreach($action['attrs'] as $attr=>$value)
-											 	{!!$attr!!}="{!!$value!!}"
+											 	{!!$attr!!}{!! $value !== true ? '="'.$value.'"' : '' !!}
 											 @endforeach
 											>
 												@if (isset($action['icon']))
