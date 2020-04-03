@@ -12,10 +12,10 @@
 					<legend>@lang('Simplegrid::grid.Advanced Search')</legend>
 					@include('Simplegrid::advancedSearch', ['fields'=>$advancedSearchFields])
 					<button class="btn-submit-advanced-search btn btn-default" type="submit" title="@lang('Simplegrid::grid.Search')">
-						<span class="glyphicon glyphicon-search"> </span> @lang('Simplegrid::grid.Search')
+						<span class="fa fa-search"> </span> @lang('Simplegrid::grid.Search')
 					</button>
 					@if($allowSearch)
-						<a href="{{$urlSimpleSearch}}" class="btn btn-default" title="@lang('Simplegrid::grid.Simple Search')"><span class="glyphicon glyphicon-zoom-out"></span></a>
+						<a href="{{$urlSimpleSearch}}" class="btn btn-default" title="@lang('Simplegrid::grid.Simple Search')"><span class="fa fa-zoom-out"></span></a>
 					@endif
 					@if ($totalRows>0)
 						<span class="total-info pull-right">
@@ -39,12 +39,12 @@
 						@endif
 					@endforeach
 					<input type="text" name="search" class="form-control input-search" placeholder="@lang('Simplegrid::grid.Search by...')" value="{{$searchedValue}}">
-					<button class="btn-search btn btn-default" type="submit" title="@lang('Simplegrid::grid.Search')"><span class="glyphicon glyphicon-search"></span></button>		      	
+					<button class="btn-search btn btn-default" type="submit" title="@lang('Simplegrid::grid.Search')"><span class="fa fa-search"></span></button>		      	
 					@if (isset($searchedValue) && $searchedValue<>'')				      		
-						<button class="btn-clear-search btn btn-default" type="button" title="@lang('Simplegrid::grid.Clear search')"><span class="glyphicon glyphicon-remove"></span></button>
+						<button class="btn-clear-search btn btn-default" type="button" title="@lang('Simplegrid::grid.Clear search')"><span class="fa fa-remove"></span></button>
 					@endif
 					@if ($advancedSearch && $advancedSearchOpened === false)
-						<a href="{{$urlAdvancedSearch}}" class="btn-advanced-search btn btn-default" title="@lang('Simplegrid::grid.Advanced Search')"><span class="glyphicon glyphicon-zoom-in"></span></a>
+						<a href="{{$urlAdvancedSearch}}" class="btn-advanced-search btn btn-default" title="@lang('Simplegrid::grid.Advanced Search')"><span class="fa fa-zoom-in"></span></a>
 					@endif
 				</form>
 			@endif
@@ -218,7 +218,7 @@
 					@endif
 				</select>
 				<a href="#" data-href="{{$urlExport}}" target="_blank" class="input-group-addon btn-export" title="@lang('Simplegrid::grid.Export')" data-alert-msg="@lang('Simplegrid::grid.Select a format for export!')">
-					<span class="glyphicon glyphicon-download"></span> @lang('Simplegrid::grid.Export')
+					<span class="fa fa-download"></span> @lang('Simplegrid::grid.Export')
 				</a>
 			</div>		
 			@endif
