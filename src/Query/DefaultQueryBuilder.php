@@ -108,17 +108,17 @@ class DefaultQueryBuilder implements QueryBuilderContract{
 					switch ($advancedSearchFields[$field]['type']) {
 						case 'date':
 						case 'datetime':
-							if(!$valueAux) continue;
+							if($valueAux){
+								$type = $advancedSearchFields[$field]['type'];
+								$inputFormat = $advancedSearchOptions['formats'][$type]['input'][1];
 
-							$type = $advancedSearchFields[$field]['type'];
-							$inputFormat = $advancedSearchOptions['formats'][$type]['input'][1];
+								$processFormat = $advancedSearchOptions['formats'][$type]['processTo'][1];
 
-							$processFormat = $advancedSearchOptions['formats'][$type]['processTo'][1];
-
-							$valueProcessed = $valueAux;
-							
-							if($inputFormat!=$processFormat)
-								$valueProcessed = Carbon::createFromFormat($inputFormat, $valueAux)->format($processFormat);
+								$valueProcessed = $valueAux;
+								
+								if($inputFormat!=$processFormat)
+									$valueProcessed = Carbon::createFromFormat($inputFormat, $valueAux)->format($processFormat);
+							}
 						break;
 						case 'integer':										
 							$valueProcessed = (int) $valueAux;
