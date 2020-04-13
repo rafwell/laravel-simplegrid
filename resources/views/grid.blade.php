@@ -15,7 +15,7 @@
 						<span class="fa fa-search"> </span> @lang('Simplegrid::grid.Search')
 					</button>
 					@if($allowSearch)
-						<a href="{{$urlSimpleSearch}}" class="btn btn-default" title="@lang('Simplegrid::grid.Simple Search')"><span class="fa fa-zoom-out"></span></a>
+						<a href="{{$urlSimpleSearch}}" class="btn btn-default" title="@lang('Simplegrid::grid.Simple Search')"><span class="fa fa-search-minus"></span></a>
 					@endif
 					@if ($totalRows>0)
 						<span class="total-info pull-right">
@@ -44,7 +44,7 @@
 						<button class="btn-clear-search btn btn-default" type="button" title="@lang('Simplegrid::grid.Clear search')"><span class="fa fa-remove"></span></button>
 					@endif
 					@if ($advancedSearch && $advancedSearchOpened === false)
-						<a href="{{$urlAdvancedSearch}}" class="btn-advanced-search btn btn-default" title="@lang('Simplegrid::grid.Advanced Search')"><span class="fa fa-zoom-in"></span></a>
+						<a href="{{$urlAdvancedSearch}}" class="btn-advanced-search btn btn-default" title="@lang('Simplegrid::grid.Advanced Search')"><span class="fa fa-search-plus"></span></a>
 					@endif
 				</form>
 			@endif
