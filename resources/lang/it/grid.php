@@ -8,7 +8,7 @@ return [
 	'Search by...'=>'Cerca per...',
 	'Clear search'=>'Cancella ricerca',
 	'Apply to selected'=>'Applica a selezionato',
-	'Showing'=>'Sta guardando',
+	'Showing'=>'Stà guardando',
 	'rows per page.'=>'record per pagina.',
 	'Order ascending'=>'Ordinamento crescente',
 	'Order descending'=>'Ordinamento decrescente',
