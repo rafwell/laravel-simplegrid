@@ -30,7 +30,7 @@
 			</form>
 		</div>
 	@else
-		<div class="search simple-search {{isset($searchedValue) && $searchedValue<>'' ? 'searched' : ''}}">		
+		<div class="search simple-search {{isset($advancedSearch) && $advancedSearch ? 'with-advanced-search' : ''}} {{isset($searchedValue) && $searchedValue<>'' ? 'searched' : ''}}">		
 			@if($allowSearch)
 				<form action="{{$url}}" method="get">			
 					@foreach($fieldsRequest as $field=>$valor)
@@ -41,7 +41,7 @@
 					<input type="text" name="search" class="form-control input-search" placeholder="@lang('Simplegrid::grid.Search by...')" value="{{$searchedValue}}">
 					<button class="btn-search btn btn-default" type="submit" title="@lang('Simplegrid::grid.Search')"><span class="fa fa-search"></span></button>		      	
 					@if (isset($searchedValue) && $searchedValue<>'')				      		
-						<button class="btn-clear-search btn btn-default" type="button" title="@lang('Simplegrid::grid.Clear search')"><span class="fa fa-remove"></span></button>
+						<button class="btn-clear-search btn btn-default" type="button" title="@lang('Simplegrid::grid.Clear search')"><span class="fa fa-times"></span></button>
 					@endif
 					@if ($advancedSearch && $advancedSearchOpened === false)
 						<a href="{{$urlAdvancedSearch}}" class="btn-advanced-search btn btn-default" title="@lang('Simplegrid::grid.Advanced Search')"><span class="fa fa-search-plus"></span></a>
