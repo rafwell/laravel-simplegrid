@@ -8,7 +8,7 @@ In this link you can see an demo application: [https://laravel-simple-grid.herok
 **rafwell/laravel-simplegrid** is compatibly with Laravel 5.2+
 
 ## Instalation
-1. Add the dependency to your composer.json ```composer require "rafwell/laravel-simplegrid"``` or ```"rafwell/laravel-simplegrid": "~1.1"```.
+1. Add the dependency to your composer.json ```composer require "rafwell/laravel-simplegrid"``` or ```"rafwell/laravel-simplegrid": "^2.0"```.
 2. Execute ```composer update```.
 3. Add to your ```config/app.php``` our service provider: ```Rafwell\Simplegrid\SimplegridServiceProvider::class```
 4. Execute ```php artisan vendor:publish --provider="Rafwell\Simplegrid\SimplegridServiceProvider"```
@@ -191,3 +191,6 @@ If you want contribute, you can open issues to discussion.
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+## Breakingchanges log
+* Since the version 2.0 we have added an [html-sanitizer](https://github.com/tgalopin/html-sanitizer) by default. This can break your code if you are showing some specific html entities in your grid. Note thatn on the version 1 was your responsability prevent that. If you are not sanitizing your data before renderi it, they can be unsafe, you can be vulnerable to attacks XSS. We highly recommend all you to update to the version 2.0, the default tags allowed is very common, rarely will affect your code. 

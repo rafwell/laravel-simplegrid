@@ -12,6 +12,7 @@ use DB;
 use Exception;
 use Rafwell\Simplegrid\Export\Excel;
 use Rafwell\Simplegrid\Export\Pdf;
+use \HtmlSanitizer\Sanitizer;
 
 class Grid{
 	private $view;	
@@ -42,6 +43,7 @@ class Grid{
 	protected $allowSearch = true;
 	public $simpleGridConfig;
 	public $queryBuilder;
+	protected $sanitizer;
 
 	function __construct($query, $id, $config = []){		
 		//merge the configurations
@@ -57,7 +59,7 @@ class Grid{
 		$this->id = $id;				
 		$this->Request = Request::capture();		
 
-
+		$this->sanitizer = Sanitizer::create($this->simpleGridConfig['sanitizer']);
 
 		return $this;
 	}
@@ -353,6 +355,16 @@ class Grid{
         }
 		return $string;
 	}
+	
+	protected function doSanitizeRows(&$rows){
+		foreach($rows as &$row){
+			foreach($row as &$column){
+				if(is_string($column)){
+					$column = $this->sanitizer->sanitize($column);
+				}
+			}
+		}
+	}
 
 	public function make($returnQuery = false){
 		$this->validateFields();
@@ -475,6 +487,9 @@ class Grid{
 				}
 			}
 		}
+
+		//Sanitize rows
+		$this->doSanitizeRows($rows);
 
 		if($this->processLineClosure){
 			for($i = 0; $i<count($rows); $i++){	 

@@ -37,4 +37,8 @@ return [
 		]
 	],
 	'paginationType'=>'pills', //select | pills
+	'sanitizer'=>[
+		//Se more details in https://github.com/tgalopin/html-sanitizer
+		'extensions' => ['basic', 'code', 'image', 'list', 'table', 'iframe', 'details', 'extra'],
+	],
 ];
