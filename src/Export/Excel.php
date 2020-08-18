@@ -7,6 +7,7 @@ use Exception;
 use Box\Spout\Writer\WriterFactory;
 use Box\Spout\Common\Type;
 use Box\Spout\Writer\Style\StyleBuilder;
+use Rafwell\Simplegrid\Helpers\StringUtil;
 
 class Excel{
     protected $writer;
@@ -65,12 +66,19 @@ class Excel{
                 foreach($row as &$column){
                     $column = str_replace("\xA0", ' ', $column);	
                     $column = str_replace('&nbsp;', ' ', $column);							
-                    $column = str_replace(['<br>','<br/>'], "\r", $column);		
-                    $column = html_entity_decode($column, null, 'UTF-8');					
-                }
+                    $column = str_replace(['<br>','<br/>'], "\r", $column);
+                    $column = str_replace('R$ ', 'R$', $column);		
+                    $column = html_entity_decode($column, null, 'UTF-8');	
 
-                $row = array_map('strip_tags', $row);
-                $row = array_map('trim', $row);
+                    if($this->isBrazilianMoneyFormat($column)){
+                        $column = $this->normalizeBrazilianMoney($column);
+                    }			
+                    
+                    if(is_string($column)){
+                        $column = trim($column);
+                        $column = strip_tags($column);
+                    }
+                }
                 
                 $this->writer->addRowWithStyle( $row, $style );				
             }
@@ -100,5 +108,14 @@ class Excel{
 
     public function getFileContent(){
         return file_get_contents( $this->getFilePath() );
+    }
+
+    protected function isBrazilianMoneyFormat($string){
+        $res = preg_match('/R\$[0-9\.]*\,[0-9$]*/', $string);
+        return $res > 0;
+    }
+
+    protected function normalizeBrazilianMoney($string){
+        return StringUtil::brazilianNumberToFloat($string);
     }
 }
