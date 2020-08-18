@@ -64,7 +64,6 @@ class Excel{
                 //Clear html before export
                 
                 foreach($row as &$column){
-                    $column = str_replace("\xA0", ' ', $column);	
                     $column = str_replace('&nbsp;', ' ', $column);							
                     $column = str_replace(['<br>','<br/>'], "\r", $column);
                     $column = str_replace('R$ ', 'R$', $column);		
