@@ -110,7 +110,7 @@ class Excel{
     }
 
     protected function isBrazilianMoneyFormat($string){
-        $res = preg_match('/R\$[0-9\.]*\,[0-9$]*/', $string);
+        $res = preg_match('/R\$\-?[0-9\.]*\,[0-9$]*/', $string);
         return $res > 0;
     }
 
