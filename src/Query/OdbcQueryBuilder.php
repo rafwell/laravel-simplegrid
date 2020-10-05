@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use DB;
 use Exception;
 use Carbon\Carbon;
+use Log;
 
 class OdbcQueryBuilder extends DefaultQueryBuilder implements QueryBuilderContract {
 	protected $fieldsForSelect = [];
@@ -21,7 +22,10 @@ class OdbcQueryBuilder extends DefaultQueryBuilder implements QueryBuilderContra
 		$fieldsForSelect = [];		
 
 		foreach($this->fieldsForSelect as $k=>$v){
-			if(!is_array($v)) dd($this->fieldsForSelect);
+			if(!is_array($v)) {
+				Log::debug($this->fieldsForSelect);
+				throw new Exception('An array was expected.');
+			}
 
 			if(strpos($v['field'], ' ')!==false){
 				$v['field'] = '('.$v['field'].')';

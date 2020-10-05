@@ -8,6 +8,7 @@ use Box\Spout\Writer\WriterFactory;
 use Box\Spout\Common\Type;
 use Box\Spout\Writer\Style\StyleBuilder;
 use Rafwell\Simplegrid\Helpers\StringUtil;
+use Log;
 
 class Excel{
     protected $writer;
@@ -33,14 +34,18 @@ class Excel{
         $this->fileName = $grid->id.'-export-'.date('Y-m-d-H:i:s').'.'.$this->fileExt;
         $this->writer->openToFile($this->filePath);
 
-        $rowsPerPageExport = 10000;
+        $rowsPerPageExport = 1000;
         $totalPagesExport = ceil($grid->totalRows/$rowsPerPageExport); //itens per query
         
         $fieldsNamesAfterQuery = array_flip(collect($grid->fields)->pluck('alias_after_query_executed')->toArray());
         
         for($i = 1; $i<=$totalPagesExport; $i++){				
-            $grid->queryBuilder->paginate($rowsPerPageExport, $i);
-            $rows = $grid->queryBuilder->performQueryAndGetRows();		
+            $cloneBuilder = clone $grid->queryBuilder;
+
+            $cloneBuilder->paginate($rowsPerPageExport, $i);
+            $rows = $cloneBuilder->performQueryAndGetRows();		
+            
+            unset($cloneBuilder);
 
             if($i===1){
                 $header = [];
