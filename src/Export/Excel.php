@@ -39,10 +39,13 @@ class Excel{
         
         $fieldsNamesAfterQuery = array_flip(collect($grid->fields)->pluck('alias_after_query_executed')->toArray());
         
-        for($i = 1; $i<=$totalPagesExport; $i++){				
+
+        for($i = 1; $i<=$totalPagesExport; $i++){			
+        
             $cloneBuilder = clone $grid->queryBuilder;
 
             $cloneBuilder->paginate($rowsPerPageExport, $i);
+            
             $rows = $cloneBuilder->performQueryAndGetRows();		
             
             unset($cloneBuilder);
@@ -59,8 +62,8 @@ class Excel{
             }
 
             if($grid->processLineClosure){
-                for($i = 0; $i<count($rows); $i++){	 
-                    $rows[$i] = call_user_func($grid->processLineClosure, $rows[$i]);
+                for($j = 0; $j<count($rows); $j++){	 
+                    $rows[$j] = call_user_func($grid->processLineClosure, $rows[$j]);
                 }
             }
 
