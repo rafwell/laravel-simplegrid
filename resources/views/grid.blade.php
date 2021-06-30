@@ -174,7 +174,14 @@
 												{!!$action['append']!!}
 											</button>
 										@else
-											<form action="{!!$action['url']!!}" method="POST" {!! ($action['confirm']!==false ? 'onsubmit="if(!confirm(\''.addslashes(htmlentities($action['confirm'])).'\')){event.preventDefault; return false;}; "' : '' ); !!} >
+											<form 
+												action="{!!$action['url']!!}" 
+												method="POST" 
+												{!! ($action['confirm']!==false ? 'onsubmit="if(!confirm(\''.addslashes(htmlentities($action['confirm'])).'\')){event.preventDefault; return false;}; "' : '' ); !!}
+												@foreach($action['attrs'] as $attr=>$value)
+													{!!$attr!!}{!! $value !== true ? '="'.$value.'"' : '' !!}
+												@endforeach
+											 >
 												{{csrf_field()}}
 												<input type="hidden" name="_method" value="{!!$action['method']!!}">
 												<button type="submit" title="{{$action['title']}}" class="btn btn-xs action btn-default">
