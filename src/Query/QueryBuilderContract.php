@@ -1,10 +1,12 @@
 <?php
+
 namespace Rafwell\Simplegrid\Query;
 
 use Illuminate\Database\Eloquent\Builder;
 
-interface QueryBuilderContract{
-	public function __construct(Builder $model);	
+interface QueryBuilderContract
+{
+	public function __construct(Builder $model);
 
 	public function getFieldsForSelect($hydrate = true, $addAlias = true);
 

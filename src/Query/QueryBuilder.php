@@ -1,36 +1,41 @@
 <?php
+
 namespace Rafwell\Simplegrid\Query;
+
 use Illuminate\Database\Eloquent\Builder;
 use Rafwell\Simplegrid\Query\DefaultQueryBuilder;
 use Rafwell\Simplegrid\Query\OdbcQueryBuilder;
 use Rafwell\Simplegrid\Query\SqlServerQueryBuilder;
 
-class QueryBuilder{
-	private $model;	
+class QueryBuilder
+{
+	private $model;
 	private $builder;
 
-	public function __construct(Builder $model){
-		$this->model = $model;		
+	public function __construct(Builder $model)
+	{
+		$this->model = $model;
 
-		switch($this->getDriverName()){			
+		switch ($this->getDriverName()) {
 			case 'odbc':
 				$this->builder = new OdbcQueryBuilder($this->model);
-			break;
-			case 'sqlsrv':			
+				break;
+			case 'sqlsrv':
 				$this->builder = new SqlServerQueryBuilder($this->model);
-			break;
-			default:						
+				break;
+			default:
 				$this->builder = new DefaultQueryBuilder($this->model);
-			break;				
+				break;
 		}
 	}
 
-	private function getDriverName(){
+	private function getDriverName()
+	{
 		return strtolower($this->model->getConnection()->getPdo()->getAttribute(\PDO::ATTR_DRIVER_NAME));
 	}
 
-	public function getBuilder(){
+	public function getBuilder()
+	{
 		return $this->builder;
 	}
-	
 }
