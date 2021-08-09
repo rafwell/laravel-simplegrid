@@ -12,10 +12,34 @@ foreach($fields as $field=>$opts){
 		case 'select': ?>
 			<div class="field {!!str_replace('.', '_', $field)!!} {!!isset($searchedValue[$field]) && $searchedValue[$field]!=='' ? 'searched' : ''!!}">
 				<label>{!!$opts['label']!!} <span class="btn-remove"><span class="fa fa-times"></span></label>
-				<select name="search[][{!!$field!!}]" class="form-control" data-value="{{isset($searchedValue[$field]) && $searchedValue[$field]!=='' ? $searchedValue[$field] : ''}}">
+				<select 
+					name="search[][{!!$field!!}]" 
+					class="form-control" 
+					@if($opts['multiple'])
+					multiple
+					data-value="{{isset($searchedValue[$field]) ? json_encode($searchedValue[$field]) : ''}}" 
+					@else
+					data-value="{{isset($searchedValue[$field]) && $searchedValue[$field]!=='' ? $searchedValue[$field] : ''}}" 
+					@endif
+					@foreach($opts['attrs'] as $k=>$v)
+						@if(is_int($k))
+							{{$v}}
+						@else
+							{{$k}}="{{$v}}"
+						@endif
+					@endforeach
+				>
 					<option value="">{{isset($opts['placeholder']) ? $opts['placeholder'] : ''}}</option>					
 					@foreach($opts['options'] as $value=>$label)					
-					<option value="{{$value}}" {!!isset($searchedValue[$field]) && $searchedValue[$field]!=='' && $searchedValue[$field]==$value ? 'selected' : ''!!}>{{$label}}</option>
+					<option value="{{$value}}" 
+						@if($opts['multiple'])
+						{!!isset($searchedValue[$field]) && in_array($value, $searchedValue[$field]) ? 'selected' : ''!!}
+						@else
+						{!!isset($searchedValue[$field]) && $searchedValue[$field]!=='' && $searchedValue[$field]==$value ? 'selected' : ''!!}
+						@endif
+						>
+						{{$label}}
+					</option>
 					@endforeach
 				</select>
 			</div>

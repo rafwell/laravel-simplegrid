@@ -316,6 +316,9 @@ class Grid
 
 			if (!isset($field['options']))
 				$field['options'] = [];
+
+			$field['multiple'] = $field['multiple'] ?? false;
+			$field['attrs'] = $field['attrs'] ?? [];
 		}
 
 		return $this;
@@ -414,7 +417,7 @@ class Grid
 					$this->queryBuilder->performSimpleSearch($this->Request->search);
 				} else {
 					//make where advanced search
-					$this->queryBuilder->performAdvancedSearch($this->Request->search, $this->advancedSearchFields, $this->simpleGridConfig['advancedSearch']);
+					$this->queryBuilder->performAdvancedSearch($this->Request->search, $this->advancedSearchFields, $this->simpleGridConfig['advancedSearch'], $this->fields);
 				}
 			}
 

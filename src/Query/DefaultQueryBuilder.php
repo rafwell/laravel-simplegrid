@@ -83,17 +83,59 @@ class DefaultQueryBuilder implements QueryBuilderContract
 		$this->model->where(DB::raw($fields), 'like', '%' . $search . '%');
 	}
 
+	protected function getValueMultipleSearchByIndex(array $search, array $advancedSearchFields, int $i)
+	{
+		$res = [];
+
+		foreach ($search[$i] as $field => $value) {
+
+			if ($advancedSearchFields[$field]['multiple']) {
+				$prepare = array_map(function ($item) {
+					return ['field' => key($item), 'value' => $item[key($item)]];
+				}, $search);
+
+
+				$collect = collect($prepare)->where('field', $field)->pluck('value');
+
+				foreach ($collect as $item) {
+					$res[] = $item;
+				}
+			} else {
+				$res[] = [$field => $value];
+			}
+		}
+
+		return $res;
+	}
+
 	public function performAdvancedSearch(array $search, array $advancedSearchFields, array $advancedSearchOptions)
 	{
+
 		for ($i = 0; $i < count($search); $i++) {
 
 			foreach ($search[$i] as $field => $value) {
+
+
+
 				if (!is_callable($advancedSearchFields[$field]['where']))
 					$fieldSearched = $this->fieldsForSelect[$field]['field'];
 				else {
 					$fieldSearched = '';
 				}
 
+
+				//dd($this->searchedValue);
+
+				if ($advancedSearchFields[$field]['multiple']) {
+					$value = $this->getValueMultipleSearchByIndex($search, $advancedSearchFields, $i);
+
+					$this->searchedValue[$field] = $value;
+
+					if (count($value) > 0 && $advancedSearchFields[$field]['where'] === false) {
+						$this->model->whereIn(DB::raw('(' . $fieldSearched . ')'), $value);
+					}
+					$valueProcessed = $value;
+				} else
 				if (is_string($value)) {
 					$value = trim($value);
 					$this->searchedValue[$field] = $value;
@@ -138,6 +180,7 @@ class DefaultQueryBuilder implements QueryBuilderContract
 							$valueProcessed = (float) $valueAux;
 							break;
 						default:
+
 							$valueProcessed = $valueAux;
 							break;
 					}
