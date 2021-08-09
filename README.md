@@ -86,7 +86,8 @@ $Grid->fields([
     'first_name'=>'First Name', // It's a shortcut for ['type'=>'text', 'label'=>'First Name'],
     'last_name'=>[
         //omiting the label. I'ts a shortcut, like above
-        'type'=>'text'
+        'type'=>'text',
+        'sanitize'=>false //This field will not be sanitized
     ],
     'gender'=>[
         'type'=>'select',
