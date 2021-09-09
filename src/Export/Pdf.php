@@ -29,6 +29,7 @@ class Pdf
         for ($i = 1; $i <= $totalPagesExport; $i++) {
             $grid->queryBuilder->paginate($rowsPerPageExport, $i);
             $rows = $grid->queryBuilder->performQueryAndGetRows();
+            $rows = $grid->translateActions($rows);
 
             if ($i === 1) {
                 $header = [];

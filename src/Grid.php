@@ -401,6 +401,41 @@ class Grid
 		}
 	}
 
+	public function translateActions(array $rows)
+	{
+		$nrLines = count($rows);
+
+		//translate actions
+		if (isset($this->actions)) {
+			for ($i = 0; $i < $nrLines; $i++) {
+				foreach ($this->actions as $action) {
+					if (strpos($action['url'], '{') !== false) {
+						//Have variable to translate
+						$action['url'] = $this->translateVariables($action['url'], $rows[$i]);
+					}
+
+					if (strpos($action['append'], '{') !== false) {
+						$action['append'] = $this->translateVariables($action['append'], $rows[$i]);
+					}
+
+					if (strpos($action['next'], '{') !== false) {
+						$action['next'] = $this->translateVariables($action['next'], $rows[$i]);
+					}
+
+					foreach ($action['attrs'] as $attr => $value) {
+						if ($value !== true) {
+							$action['attrs'][$attr] = $this->translateVariables($value, $rows[$i]);
+						}
+					}
+
+					$rows[$i]['gridActions'][$action['title']] = $action;
+				}
+			}
+		}
+
+		return $rows;
+	}
+
 	public function make($returnQuery = false)
 	{
 		$this->validateFields();
@@ -460,6 +495,7 @@ class Grid
 
 			$this->queryBuilder->paginate($this->currentRowsPerPage, $this->currentPage);
 			$rows = $this->queryBuilder->performQueryAndGetRows();
+			$rows = $this->translateActions($rows);
 		} else
 		if ($this->export && $this->Request->get('export')) {
 			if (!$this->simpleGridConfig['allowExport'])
@@ -492,36 +528,6 @@ class Grid
 					break;
 			}
 			die('');
-		}
-
-		$nrLines = count($rows);
-
-		//translate actions
-		if (isset($this->actions)) {
-			for ($i = 0; $i < $nrLines; $i++) {
-				foreach ($this->actions as $action) {
-					if (strpos($action['url'], '{') !== false) {
-						//Have variable to translate
-						$action['url'] = $this->translateVariables($action['url'], $rows[$i]);
-					}
-
-					if (strpos($action['append'], '{') !== false) {
-						$action['append'] = $this->translateVariables($action['append'], $rows[$i]);
-					}
-
-					if (strpos($action['next'], '{') !== false) {
-						$action['next'] = $this->translateVariables($action['next'], $rows[$i]);
-					}
-
-					foreach ($action['attrs'] as $attr => $value) {
-						if ($value !== true) {
-							$action['attrs'][$attr] = $this->translateVariables($value, $rows[$i]);
-						}
-					}
-
-					$rows[$i]['gridActions'][$action['title']] = $action;
-				}
-			}
 		}
 
 		//Sanitize rows

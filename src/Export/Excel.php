@@ -50,6 +50,7 @@ class Excel
             $cloneBuilder->paginate($rowsPerPageExport, $i);
 
             $rows = $cloneBuilder->performQueryAndGetRows();
+            $rows = $grid->translateActions($rows);
 
             unset($cloneBuilder);
 
@@ -63,6 +64,7 @@ class Excel
 
                 $this->writer->addRowWithStyle($header, $style);
             }
+
 
             if ($grid->processLineClosure) {
                 for ($j = 0; $j < count($rows); $j++) {
