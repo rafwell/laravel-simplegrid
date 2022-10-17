@@ -15,6 +15,7 @@ class DefaultQueryBuilder implements QueryBuilderContract
 	protected $model;
 	protected $searchedValue;
 	protected $subqueryMode = false;
+	protected $emptyBecauseSearchIsRequired = false;
 
 	public function __construct(Builder $model)
 	{
@@ -75,12 +76,18 @@ class DefaultQueryBuilder implements QueryBuilderContract
 		$this->model->skip(($currentPage - 1) * $rowsPerPage)->take($rowsPerPage);
 	}
 
-	public function performSimpleSearch($search)
+	public function performSimpleSearch($search): bool
 	{
 		$search = trim($search);
 		$this->searchedValue = $search;
-		$fields = $this->getSimpleSearchConcatenatedFields();
-		$this->model->where(DB::raw($fields), 'like', '%' . $search . '%');
+
+		if ($this->searchedValue !== '') {
+			$fields = $this->getSimpleSearchConcatenatedFields();
+			$this->model->where(DB::raw($fields), 'like', '%' . $search . '%');
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	protected function getValueMultipleSearchByIndex(array $search, array $advancedSearchFields, int $i)
@@ -108,9 +115,9 @@ class DefaultQueryBuilder implements QueryBuilderContract
 		return $res;
 	}
 
-	public function performAdvancedSearch(array $search, array $advancedSearchFields, array $advancedSearchOptions)
+	public function performAdvancedSearch(array $search, array $advancedSearchFields, array $advancedSearchOptions): bool
 	{
-
+		$searched = false;
 		for ($i = 0; $i < count($search); $i++) {
 
 			foreach ($search[$i] as $field => $value) {
@@ -204,8 +211,14 @@ class DefaultQueryBuilder implements QueryBuilderContract
 					//the user will make the where
 					call_user_func($advancedSearchFields[$field]['where'], $this->model, $valueProcessed);
 				}
+
+				if ((string) $valueProcessed !== '') {
+					$searched = true;
+				}
 			}
 		}
+
+		return $searched;
 	}
 
 	public function getSearchedValue()
@@ -293,16 +306,27 @@ class DefaultQueryBuilder implements QueryBuilderContract
 				$db->connection($connection);
 
 			$db->mergeBindings($this->getModelQuery($countModel));
-
+			if ($this->emptyBecauseSearchIsRequired) {
+				$db->limit(0);
+			}
 			return $db->count();
 		} else {
+			if ($this->emptyBecauseSearchIsRequired) {
+				$countModel->limit(0);
+			}
 			return $countModel->count();
 		}
 	}
 
 	public function buildQueryForGet()
 	{
-		return $this->model->select($this->getFieldsForSelect());
+		$query =  $this->model->select($this->getFieldsForSelect());
+
+		if ($this->emptyBecauseSearchIsRequired) {
+			$query->limit(0);
+		}
+
+		return $query;
 	}
 
 	public function performQueryAndGetRows()
@@ -313,5 +337,10 @@ class DefaultQueryBuilder implements QueryBuilderContract
 				return (array) $x;
 			})->toArray();
 		return $data;
+	}
+
+	public function setEmptyBecauseSearchIsRequired()
+	{
+		$this->emptyBecauseSearchIsRequired = true;
 	}
 }

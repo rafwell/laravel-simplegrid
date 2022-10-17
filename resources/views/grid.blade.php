@@ -204,7 +204,7 @@
 				@else
 					<tr>
 						<td colspan="{!!isset($actions) ? count($fields)+($checkbox['show'] ? 1 : 0)+1 : count($fields)+($checkbox['show'] ? 1 : 0) !!}" class="no-results-found">
-							<span>@lang('Simplegrid::grid.No results found.')</span>
+							<span> @lang($emptyBecauseSearchIsRequired ? 'Simplegrid::grid.Do a search to get data.': 'Simplegrid::grid.No results found.')</span>
 						</td>
 					</tr>
 				@endif

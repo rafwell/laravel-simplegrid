@@ -31,6 +31,8 @@ class Grid
 	public $searchedValue;
 	public $searchFields;
 	public $fieldsWhereSearch;
+	public $searchIsRequired;
+	protected $emptyBecauseSearchIsRequired = false;
 	public $checkbox = ['show' => false, 'field' => false];
 	public $bulkActions;
 	public $advancedSearch = false;
@@ -114,6 +116,12 @@ class Grid
 
 		$this->checkHasDoubleAlias();
 
+		return $this;
+	}
+
+	public function setSearchIsRequired($bool)
+	{
+		$this->searchIsRequired = $bool;
 		return $this;
 	}
 
@@ -449,11 +457,18 @@ class Grid
 			if (isset($this->Request->search)) {
 				if (is_string($this->Request->search)) {
 					//make where simple search
-					$this->queryBuilder->performSimpleSearch($this->Request->search);
+					$searched = $this->queryBuilder->performSimpleSearch($this->Request->search);
 				} else {
 					//make where advanced search
-					$this->queryBuilder->performAdvancedSearch($this->Request->search, $this->advancedSearchFields, $this->simpleGridConfig['advancedSearch'], $this->fields);
+					$searched = $this->queryBuilder->performAdvancedSearch($this->Request->search, $this->advancedSearchFields, $this->simpleGridConfig['advancedSearch'], $this->fields);
 				}
+			} else {
+				$searched = false;
+			}
+
+			if ($this->searchIsRequired && !$searched) {
+				$this->emptyBecauseSearchIsRequired = true;
+				$this->queryBuilder->setEmptyBecauseSearchIsRequired();
 			}
 
 			//advanced search
@@ -575,7 +590,8 @@ class Grid
 			'urlSimpleSearch' => $this->getUrl('simple-search'),
 			'urlRowsPerPage' => $this->getUrl('rows-per-page'),
 			'urlExport' => $this->getUrl('url-export'),
-			'simpleGridConfig' => $this->simpleGridConfig
+			'simpleGridConfig' => $this->simpleGridConfig,
+			'emptyBecauseSearchIsRequired' => $this->emptyBecauseSearchIsRequired,
 		]);
 
 		return $this->view;
