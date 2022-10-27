@@ -23,12 +23,9 @@ class DefaultQueryBuilder implements QueryBuilderContract
 
 		if ($this->model->getQuery()->unions) {
 			//when has union must do a sub query
-			$db = DB::table(DB::raw("({$this->model->toSql()}) as sub"));
+			$connection = $this->model->getModel()->getConnectionName();
 
-			if ($connection = $this->model->getModel()->getConnectionName()) {
-				if (method_exists($connection, 'connection'))
-					$db->connection($connection);
-			}
+			$db = DB::connection($connection)->table(DB::raw("({$this->model->toSql()}) as sub"));
 
 			$db->mergeBindings($this->model->getQuery());
 
@@ -300,10 +297,9 @@ class DefaultQueryBuilder implements QueryBuilderContract
 
 		if ($this->getModelQuery($countModel)->groups) {
 			//when has group by need count over an sub query
-			$db = DB::table(DB::raw("({$countModel->selectRaw('1')->toSql()}) as sub"));
+			$connection = $countModel->getModel()->getConnectionName();
+			$db = DB::connection($connection)->table(DB::raw("({$countModel->selectRaw('1')->toSql()}) as sub"));
 
-			if ($connection = $countModel->getModel()->getConnectionName())
-				$db->connection($connection);
 
 			$db->mergeBindings($this->getModelQuery($countModel));
 			if ($this->emptyBecauseSearchIsRequired) {
