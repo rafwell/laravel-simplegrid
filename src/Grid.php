@@ -542,7 +542,11 @@ class Grid
 					throw new Exception('Export method not allowed.');
 					break;
 			}
-			die('');
+			if (app()->runningInConsole()) {
+				return;
+			} else {
+				die('');
+			}
 		}
 
 		//Sanitize rows
