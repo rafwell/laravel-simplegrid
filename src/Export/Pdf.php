@@ -68,12 +68,21 @@ class Pdf
 
         //TODO
         //$pdfHeader = view()->make('Simplegrid::export.pdf.header',[])->render();
-        $pdfFooter = view()->make('Simplegrid::export.pdf.footer')->render();
+
+        $inlineCss = $grid->simpleGridConfig['export']['pdf']['bootstrapCss'] ? url($grid->simpleGridConfig['export']['pdf']['bootstrapCss']) : '';
+        
+        if($inlineCss){
+            $inlineCss = file_get_contents($inlineCss);
+        }
+
+        $pdfFooter = view()->make('Simplegrid::export.pdf.footer', [
+            'inlineCss'=>$inlineCss,
+        ])->render();
 
         $pdfBody = view()->make('Simplegrid::export.pdf.body', [
             'rows' => $this->rows,
             'headers' => $this->headers,
-            'bootstrapCss' => $grid->simpleGridConfig['export']['pdf']['bootstrapCss']
+            'inlineCss'=>$inlineCss,
         ])->render();
 
         $this->pdf = (app('snappy.pdf.wrapper'))->loadHTML($pdfBody)
