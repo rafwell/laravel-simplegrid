@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 	<head>
-		<link href="{!!asset('assets/relatorios/estilos.css')!!}" rel="stylesheet" />	
+		<style>
+            {!!$inlineCss!!}
+        </style>
 		<meta charset="utf-8" />
 		<script>
 	        function substitutePdfVariables() {

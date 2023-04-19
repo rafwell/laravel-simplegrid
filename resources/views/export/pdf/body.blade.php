@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 	<head>
-        <link href="{!!asset($bootstrapCss)!!}" rel="stylesheet" />
-		<link href="{!!asset('vendor/rafwell/simple-grid/css/simplegrid.css')!!}" rel="stylesheet" />
+        <style>
+            {!!$inlineCss!!}
+        </style>
 		<meta charset="utf-8" />		
 	</head>
 	<body>
