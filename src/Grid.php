@@ -49,6 +49,7 @@ class Grid
 	public $simpleGridConfig;
 	public $queryBuilder;
 	protected $sanitizer;
+	protected $Request;
 
 	function __construct($query, $id, $config = [])
 	{
@@ -453,7 +454,7 @@ class Grid
 
 		//if have 2 grids in same page, the search, ordenation, etc, will work only for the last action
 
-		if ($this->Request->grid == $this->id) {
+		if (!$this->Request->grid || ($this->Request->grid == $this->id)) {
 			if (isset($this->Request->search)) {
 				if (is_string($this->Request->search)) {
 					//make where simple search
