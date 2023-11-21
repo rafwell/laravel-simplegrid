@@ -50,6 +50,7 @@ class Grid
 	public $queryBuilder;
 	protected $sanitizer;
 	protected $Request;
+	protected $simpleSearchPlaceholder = null;
 
 	function __construct($query, $id, $config = [])
 	{
@@ -445,6 +446,13 @@ class Grid
 		return $rows;
 	}
 
+	function simpleSearchQuery($closure, $placeholder = null)
+	{
+		$this->queryBuilder->setSimpleSearchQuery($closure);
+		$this->simpleSearchPlaceholder = $placeholder;
+		return $this;
+	}
+
 	public function make($returnQuery = false)
 	{
 		$this->validateFields();
@@ -597,6 +605,7 @@ class Grid
 			'urlExport' => $this->getUrl('url-export'),
 			'simpleGridConfig' => $this->simpleGridConfig,
 			'emptyBecauseSearchIsRequired' => $this->emptyBecauseSearchIsRequired,
+			'simpleSearchPlaceholder' => $this->simpleSearchPlaceholder,
 		]);
 
 		return $this->view;

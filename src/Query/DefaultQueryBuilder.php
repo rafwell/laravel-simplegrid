@@ -16,6 +16,7 @@ class DefaultQueryBuilder implements QueryBuilderContract
 	protected $searchedValue;
 	protected $subqueryMode = false;
 	protected $emptyBecauseSearchIsRequired = false;
+	protected $simpleSearchQueryClosure;
 
 	public function __construct(Builder $model)
 	{
@@ -75,11 +76,19 @@ class DefaultQueryBuilder implements QueryBuilderContract
 
 	public function performSimpleSearch($search): bool
 	{
+
 		$search = trim($search);
 		$this->searchedValue = $search;
 
 		if ($this->searchedValue !== '') {
+
 			$fields = $this->getSimpleSearchConcatenatedFields();
+
+			if ($this->simpleSearchQueryClosure) {
+				call_user_func($this->simpleSearchQueryClosure, $this->model, $search, $fields);
+				return true;
+			}
+
 			$this->model->where(DB::raw($fields), 'like', '%' . $search . '%');
 			return true;
 		} else {
@@ -338,5 +347,11 @@ class DefaultQueryBuilder implements QueryBuilderContract
 	public function setEmptyBecauseSearchIsRequired()
 	{
 		$this->emptyBecauseSearchIsRequired = true;
+	}
+
+	public function setSimpleSearchQuery($closure)
+	{
+		$this->simpleSearchQueryClosure = $closure;
+		return $this;
 	}
 }
