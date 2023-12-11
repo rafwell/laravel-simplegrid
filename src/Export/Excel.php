@@ -128,16 +128,10 @@ class Excel
 
     protected function isBrazilianMoneyFormat($string)
     {
-        $res = preg_match('/R\$[0-9\.]*\,[0-9$]*/', $string);
-        $hasMoneyFormat = $res > 0;
+        // Check if the string matches the Brazilian money format for positive and negative values
+        $matchesMoneyFormat = preg_match('/^R\$[ ]?-?[0-9]{1,3}(?:\.[0-9]{3})*(?:,[0-9]{2})?$/', $string);
 
-        if ($hasMoneyFormat) {
-            $res = preg_match('/[^0-9R\$\.,\ ]/', $string);
-            $hasOnlyMoneyInString = $res === 0;
-            return $hasOnlyMoneyInString;
-        } else {
-            return $hasMoneyFormat;
-        }
+        return $matchesMoneyFormat;
     }
 
     protected function normalizeBrazilianMoney($string)
