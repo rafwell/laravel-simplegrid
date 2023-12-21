@@ -8,6 +8,9 @@ return [
 			'snappy' => [
 				'orientation' => 'landscape'
 			]
+		],
+		'excel' => [
+			'rowsPerPageExport' => 1000,
 		]
 	],
 	'rowsPerPage' => [10, 20, 30, 50, 100, 200], //the options to select
