@@ -56,8 +56,8 @@ class Grid
 	{
 		//merge the configurations
 		$this->simpleGridConfig = include __DIR__ . '/../config/rafwell-simplegrid.php';
-		$this->simpleGridConfig = array_merge($this->simpleGridConfig, config('rafwell-simplegrid'));
-		$this->simpleGridConfig = array_merge($this->simpleGridConfig, $config);
+		$this->simpleGridConfig = array_replace_recursive($this->simpleGridConfig, config('rafwell-simplegrid'));
+		$this->simpleGridConfig = array_replace_recursive($this->simpleGridConfig, $config);
 
 		$this->rowsPerPage = $this->simpleGridConfig['rowsPerPage'];
 		$this->currentRowsPerPage = $this->simpleGridConfig['currentRowsPerPage'];
