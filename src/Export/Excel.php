@@ -37,11 +37,7 @@ class Excel
         $this->fileName = $grid->id . '-export-' . date('Y-m-d-H:i:s') . '.' . $this->fileExt;
         $this->writer->openToFile($this->filePath);
 
-        $rowsPerPageExport = $grid->simpleGridConfig['export']['excel']['currentRowsPerPageExport'];
-
-        if ($grid->simpleGridConfig['export']['excel']['rowsPerPageExport']) {
-            $rowsPerPageExport = $grid->simpleGridConfig['export']['excel']['rowsPerPageExport'];
-        }
+        $rowsPerPageExport = $grid->simpleGridConfig['export']['excel']['rowsPerPageExport'];
 
         $totalPagesExport = ceil($grid->totalRows / $rowsPerPageExport); //itens per query
 
