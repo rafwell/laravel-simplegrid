@@ -6,7 +6,7 @@
         "email": "rafaotec@gmail.com"
     }],    
     "require": {        
-        "php": ">=7.2",
+        "php": ">=8.0",
         "box/spout": "^3.3",
         "tgalopin/html-sanitizer": "^1.4",
         "barryvdh/laravel-snappy": "^1.0"
