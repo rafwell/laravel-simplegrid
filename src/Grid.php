@@ -278,7 +278,7 @@ class Grid
 		}
 
 		$url = $this->Request->url() . $this->processUrlParameters($parameters);
-
+		$url = preg_replace('/^https?:\/\//', '//', $url);
 		return $url;
 	}
 
