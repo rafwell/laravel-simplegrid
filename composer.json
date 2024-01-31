@@ -6,10 +6,10 @@
         "email": "rafaotec@gmail.com"
     }],    
     "require": {        
-        "php": ">=7.1.0",
-        "box/spout": "^2.7",
-        "barryvdh/laravel-snappy": "^0.4",
-        "tgalopin/html-sanitizer": "^1.4"
+        "php": ">=8.0",
+        "box/spout": "^3.3",
+        "tgalopin/html-sanitizer": "^1.4",
+        "barryvdh/laravel-snappy": "^1.0"
     },
     "minimum-stability": "dev",
     "license": "MIT",
