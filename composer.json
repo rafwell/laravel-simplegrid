@@ -17,5 +17,12 @@
         "psr-4": {
             "Rafwell\\Simplegrid\\": "src/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rafwell\\Simplegrid\\SimplegridServiceProvider"
+            ]
+        }
     }
 }
