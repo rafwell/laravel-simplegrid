@@ -5,9 +5,10 @@ namespace Rafwell\Simplegrid\Export;
 use Rafwell\Simplegrid\Grid;
 use Illuminate\View\View;
 use Exception;
-use Box\Spout\Writer\WriterFactory;
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use Box\Spout\Common\Entity\Row;
 use Box\Spout\Common\Type;
-use Box\Spout\Writer\Style\StyleBuilder;
+use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Rafwell\Simplegrid\Helpers\StringUtil;
 use Log;
 
@@ -21,11 +22,11 @@ class Excel
     public function __construct($ext, Grid $grid)
     {
         if ($ext == 'xls') {
-            $this->writer = WriterFactory::create(Type::XLSX);
+            $this->writer = WriterEntityFactory::createWriter(Type::XLSX);
             $this->fileExt = 'xlsx';
         } else
         if ($ext == 'csv') {
-            $this->writer = WriterFactory::create(Type::CSV);
+            $this->writer = WriterEntityFactory::createWriter(Type::CSV);
             $this->fileExt = 'csv';
         }
 
@@ -63,7 +64,8 @@ class Excel
                     $header[] = $grid->fields[$field]['label'];
                 }
 
-                $this->writer->addRowWithStyle($header, $style);
+                $exportRow = WriterEntityFactory::createRowFromArray($header, $style);
+                $this->writer->addRow($exportRow);
             }
 
 
@@ -93,7 +95,9 @@ class Excel
                     }
                 }
 
-                $this->writer->addRowWithStyle($row, $style);
+                $exportRow = WriterEntityFactory::createRowFromArray($row, $style);
+                $this->writer->addRow($exportRow);
+                
             }
         }
 
