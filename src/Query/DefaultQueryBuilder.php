@@ -125,17 +125,12 @@ class DefaultQueryBuilder implements QueryBuilderContract
 	{
 		$searched = false;
 		for ($i = 0; $i < count($search); $i++) {
-
 			foreach ($search[$i] as $field => $value) {
-
-
-
 				if (!is_callable($advancedSearchFields[$field]['where']))
 					$fieldSearched = $this->fieldsForSelect[$field]['field'];
 				else {
 					$fieldSearched = '';
 				}
-
 
 				//dd($this->searchedValue);
 
@@ -187,10 +182,10 @@ class DefaultQueryBuilder implements QueryBuilderContract
 							}
 							break;
 						case 'integer':
-							$valueProcessed = (int) $valueAux;
+							$valueProcessed = $valueAux ?  (int) $valueAux : null;
 							break;
 						case 'decimal':
-							$valueProcessed = (float) $valueAux;
+							$valueProcessed = $valueAux ? (float) $valueAux : null;
 							break;
 						default:
 
