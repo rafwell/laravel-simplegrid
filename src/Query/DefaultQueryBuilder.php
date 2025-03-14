@@ -132,8 +132,6 @@ class DefaultQueryBuilder implements QueryBuilderContract
 					$fieldSearched = '';
 				}
 
-				//dd($this->searchedValue);
-
 				if ($advancedSearchFields[$field]['multiple']) {
 					$value = $this->getValueMultipleSearchByIndex($search, $advancedSearchFields, $i);
 
@@ -142,7 +140,12 @@ class DefaultQueryBuilder implements QueryBuilderContract
 					if (count($value) > 0 && $advancedSearchFields[$field]['where'] === false) {
 						$this->model->whereIn(DB::raw('(' . $fieldSearched . ')'), $value);
 					}
+
 					$valueProcessed = $value;
+
+					if (count($value) > 0 && $value[0] === '') {
+						$valueProcessed = [];
+					}
 				} else
 				if (is_string($value)) {
 					$value = trim($value);
@@ -213,7 +216,10 @@ class DefaultQueryBuilder implements QueryBuilderContract
 					call_user_func($advancedSearchFields[$field]['where'], $this->model, $valueProcessed);
 				}
 
-				if ((string) $valueProcessed !== '') {
+				if (is_array($valueProcessed) && count($valueProcessed) > 0) {
+					$searched = true;
+				} else 
+				if (is_string($valueProcessed) && $valueProcessed !== '') {
 					$searched = true;
 				}
 			}
