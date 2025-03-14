@@ -16,8 +16,6 @@ foreach($fields as $field=>$opts){
 					name="search[][{!!$field!!}]" 
 					class="form-control" 
 					@if($opts['multiple'])
-					chosen
-					data-placeholder-text-multiple="'Selecionar'"
 					multiple
 					data-value="{{isset($searchedValue[$field]) ? json_encode($searchedValue[$field]) : ''}}" 
 					@else
