@@ -197,15 +197,18 @@ class DefaultQueryBuilder implements QueryBuilderContract
 					}
 
 					$valueProcessed = trim($valueProcessed);
+					$direction = null;
 
 					if (isset($value['from']) && $value['from'] !== '') {
 						$this->searchedValue[$field . '_from'] = $valueAux;
+						$direction = 'from';
 						if ($advancedSearchFields[$field]['where'] === false)
 							$this->model->where(DB::raw('(' . $fieldSearched . ')'), '>=', $valueProcessed);
 					}
 
 					if (isset($value['to']) && $value['to'] !== '') {
 						$this->searchedValue[$field . '_to'] = $valueAux;
+						$direction = 'to';
 						if ($advancedSearchFields[$field]['where'] === false)
 							$this->model->where(DB::raw('(' . $fieldSearched . ')'), '<=', $valueProcessed);
 					}
@@ -213,7 +216,7 @@ class DefaultQueryBuilder implements QueryBuilderContract
 
 				if (is_callable($advancedSearchFields[$field]['where'])) {
 					//the user will make the where
-					call_user_func($advancedSearchFields[$field]['where'], $this->model, $valueProcessed);
+					call_user_func($advancedSearchFields[$field]['where'], $this->model, $valueProcessed, $direction);
 				}
 
 				if (is_array($valueProcessed) && count($valueProcessed) > 0) {
@@ -301,7 +304,7 @@ class DefaultQueryBuilder implements QueryBuilderContract
 
 	public function getTotalRows()
 	{
-		$countModel = clone ($this->model);
+		$countModel = clone($this->model);
 		$this->getModelQuery($countModel);
 		$this->getModelQuery($countModel)->orders = null;
 
