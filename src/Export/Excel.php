@@ -99,6 +99,16 @@ class Excel
                 $this->writer->addRow($exportRow);
                 
             }
+
+            $onProgress = $grid->simpleGridConfig['export']['excel']['onProgress'] ?? null;
+            if ($onProgress) {
+                $progress = (int) round(($i / $totalPagesExport) * 100);
+                if (is_string($onProgress) && class_exists($onProgress)) {
+                    app($onProgress)->reportProgress($i, $totalPagesExport, $progress);
+                } elseif (is_callable($onProgress)) {
+                    call_user_func($onProgress, $i, $totalPagesExport, $progress);
+                }
+            }
         }
 
         $this->writer->close();
