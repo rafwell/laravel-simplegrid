@@ -2,6 +2,7 @@
 
 namespace Rafwell\Simplegrid;
 
+use Rafwell\Simplegrid\Contracts\GridExportGateInterface;
 use Rafwell\Simplegrid\Query\QueryBuilder;
 use Illuminate\Http\Request;
 use Rafwell\Grid\Helpers;
@@ -49,7 +50,7 @@ class Grid
 	public $simpleGridConfig;
 	public $queryBuilder;
 	protected $sanitizer;
-	protected $Request;
+	public $Request;
 	protected $simpleSearchPlaceholder = null;
 
 	function __construct($query, $id, $config = [])
@@ -453,6 +454,21 @@ class Grid
 		return $this;
 	}
 
+	/**
+	 * Retorna a instância da gate de exportação configurada em canExport, ou null.
+	 *
+	 * @return GridExportGateInterface|null
+	 */
+	protected function getCanExportGate()
+	{
+		$canExportClass = $this->simpleGridConfig['canExport'] ?? null;
+		if (!$canExportClass || !is_string($canExportClass) || !class_exists($canExportClass)) {
+			return null;
+		}
+		$gate = app($canExportClass);
+		return $gate instanceof GridExportGateInterface ? $gate : null;
+	}
+
 	public function make($returnQuery = false)
 	{
 		$this->validateFields();
@@ -524,6 +540,11 @@ class Grid
 		if ($this->export && $this->Request->get('export')) {
 			if (!$this->simpleGridConfig['allowExport'])
 				throw new Exception('Export is not enabled.');
+
+			$gate = $this->getCanExportGate();
+			if ($gate !== null && !$gate->authorize($this)) {
+				throw new Exception('Exportação não permitida.');
+			}
 
 			@ini_set('max_execution_time', 0);
 

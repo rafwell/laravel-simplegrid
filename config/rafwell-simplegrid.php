@@ -1,6 +1,7 @@
 <?php
 return [
 	'allowExport' => true, //if true, show the export option, maybe not a good idea for big grids or low server
+	'canExport' => null, // Classe que implementa GridExportGateInterface. Se null ou inexistente, permite exportar.
 	'export' => [
 		'pdf' => [
 			'enabled' => false,
