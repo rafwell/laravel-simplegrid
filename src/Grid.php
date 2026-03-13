@@ -3,6 +3,7 @@
 namespace Rafwell\Simplegrid;
 
 use Rafwell\Simplegrid\Contracts\GridExportGateInterface;
+use Rafwell\Simplegrid\Exceptions\GridExportNotAllowedException;
 use Rafwell\Simplegrid\Query\QueryBuilder;
 use Illuminate\Http\Request;
 use Rafwell\Grid\Helpers;
@@ -543,7 +544,7 @@ class Grid
 
 			$gate = $this->getCanExportGate();
 			if ($gate !== null && !$gate->authorize($this)) {
-				throw new Exception('Exportação não permitida.');
+				throw new GridExportNotAllowedException();
 			}
 
 			@ini_set('max_execution_time', 0);
