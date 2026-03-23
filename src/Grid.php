@@ -530,10 +530,13 @@ class Grid
 		if ($this->currentPage > $this->totalPages)
 			$this->currentPage = $this->totalPages;
 
-		if (!$this->Request->get('export')) {
-			if ($returnQuery)
-				return $this->queryBuilder->buildQueryForGet();
+		// returnQuery deve funcionar também quando export está na requisição (ex.: GridExportJob em fila),
+		// senão o ramo de export retorna null no console e o clone da query quebra nos controllers.
+		if ($returnQuery) {
+			return $this->queryBuilder->buildQueryForGet();
+		}
 
+		if (!$this->Request->get('export')) {
 			$this->queryBuilder->paginate($this->currentRowsPerPage, $this->currentPage);
 			$rows = $this->queryBuilder->performQueryAndGetRows();
 			$rows = $this->translateActions($rows);
