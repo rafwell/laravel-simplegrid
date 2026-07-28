@@ -213,7 +213,7 @@ class DefaultQueryBuilder implements QueryBuilderContract
 
 				if (is_callable($advancedSearchFields[$field]['where'])) {
 					//the user will make the where
-					call_user_func($advancedSearchFields[$field]['where'], $this->model, $valueProcessed);
+					call_user_func($advancedSearchFields[$field]['where'], $this->model, $valueProcessed, ($direction ?? ''));
 				}
 
 				if (is_array($valueProcessed) && count($valueProcessed) > 0) {
@@ -301,7 +301,7 @@ class DefaultQueryBuilder implements QueryBuilderContract
 
 	public function getTotalRows()
 	{
-		$countModel = clone ($this->model);
+		$countModel = clone($this->model);
 		$this->getModelQuery($countModel);
 		$this->getModelQuery($countModel)->orders = null;
 
