@@ -159,67 +159,48 @@ class DefaultQueryBuilder implements QueryBuilderContract
 					}
 					$valueProcessed = $value;
 				} else {
-					if (isset($value['from']) && $value['from'] !== '')
-						$valueAux = $value['from'];
-					else
-					if (isset($value['to']) && $value['to'] !== '')
-						$valueAux = $value['to'];
-					else
-						$valueAux = '';
+					$fromValue = isset($value['from']) && $value['from'] !== '' ? $value['from'] : null;
+					$toValue = isset($value['to']) && $value['to'] !== '' ? $value['to'] : null;
+					$valueAux = $fromValue ?? $toValue ?? '';
+					$valueProcessed = $this->processAdvancedSearchRangeValue($valueAux, $advancedSearchFields[$field], $advancedSearchOptions);
 
-					$valueProcessed = '';
-
-					switch ($advancedSearchFields[$field]['type']) {
-						case 'date':
-						case 'datetime':
-							if ($valueAux) {
-								$type = $advancedSearchFields[$field]['type'];
-								$inputFormat = $advancedSearchOptions['formats'][$type]['input'][1];
-
-								$processFormat = $advancedSearchOptions['formats'][$type]['processTo'][1];
-
-								$valueProcessed = $valueAux;
-
-								if ($inputFormat != $processFormat)
-									$valueProcessed = Carbon::createFromFormat($inputFormat, $valueAux)->format($processFormat);
-							}
-							break;
-						case 'integer':
-							$valueProcessed = $valueAux ?  (int) $valueAux : null;
-							break;
-						case 'decimal':
-							$valueProcessed = $valueAux ? (float) $valueAux : null;
-							break;
-						default:
-
-							$valueProcessed = $valueAux;
-							break;
+					if ($fromValue !== null) {
+						$this->searchedValue[$field . '_from'] = $fromValue;
+						if ($advancedSearchFields[$field]['where'] === false) {
+							$fromProcessed = $this->processAdvancedSearchRangeValue($fromValue, $advancedSearchFields[$field], $advancedSearchOptions);
+							$this->model->where(DB::raw('(' . $fieldSearched . ')'), '>=', $fromProcessed);
+						}
 					}
 
-					$valueProcessed = trim($valueProcessed);
-
-					if (isset($value['from']) && $value['from'] !== '') {
-						$this->searchedValue[$field . '_from'] = $valueAux;
-						if ($advancedSearchFields[$field]['where'] === false)
-							$this->model->where(DB::raw('(' . $fieldSearched . ')'), '>=', $valueProcessed);
-					}
-
-					if (isset($value['to']) && $value['to'] !== '') {
-						$this->searchedValue[$field . '_to'] = $valueAux;
-						if ($advancedSearchFields[$field]['where'] === false)
-							$this->model->where(DB::raw('(' . $fieldSearched . ')'), '<=', $valueProcessed);
+					if ($toValue !== null) {
+						$this->searchedValue[$field . '_to'] = $toValue;
+						if ($advancedSearchFields[$field]['where'] === false) {
+							$toProcessed = $this->processAdvancedSearchRangeValue($toValue, $advancedSearchFields[$field], $advancedSearchOptions);
+							$this->model->where(DB::raw('(' . $fieldSearched . ')'), '<=', $toProcessed);
+						}
 					}
 				}
 
 				if (is_callable($advancedSearchFields[$field]['where'])) {
-					//the user will make the where
-					call_user_func($advancedSearchFields[$field]['where'], $this->model, $valueProcessed, ($direction ?? ''));
+					if (is_array($value) && (array_key_exists('from', $value) || array_key_exists('to', $value))) {
+						if (isset($value['from']) && $value['from'] !== '') {
+							$fromProcessed = $this->processAdvancedSearchRangeValue($value['from'], $advancedSearchFields[$field], $advancedSearchOptions);
+							call_user_func($advancedSearchFields[$field]['where'], $this->model, $fromProcessed, 'from');
+						}
+
+						if (isset($value['to']) && $value['to'] !== '') {
+							$toProcessed = $this->processAdvancedSearchRangeValue($value['to'], $advancedSearchFields[$field], $advancedSearchOptions);
+							call_user_func($advancedSearchFields[$field]['where'], $this->model, $toProcessed, 'to');
+						}
+					} else {
+						call_user_func($advancedSearchFields[$field]['where'], $this->model, $valueProcessed, '');
+					}
 				}
 
 				if (is_array($valueProcessed) && count($valueProcessed) > 0) {
 					$searched = true;
-				} else 
-				if (is_string($valueProcessed) && $valueProcessed !== '') {
+				} else
+				if ($valueProcessed !== null && $valueProcessed !== '') {
 					$searched = true;
 				}
 			}
@@ -244,6 +225,34 @@ class DefaultQueryBuilder implements QueryBuilderContract
 		$field = $this->getFieldRaw($sortedField);
 
 		$this->model->orderBy($field, $direction);
+	}
+
+	private function processAdvancedSearchRangeValue($valueAux, array $fieldConfig, array $advancedSearchOptions)
+	{
+		if ($valueAux === '' || $valueAux === null) {
+			return null;
+		}
+
+		switch ($fieldConfig['type']) {
+			case 'date':
+			case 'datetime':
+				$type = $fieldConfig['type'];
+				$inputFormat = $advancedSearchOptions['formats'][$type]['input'][1];
+				$processFormat = $advancedSearchOptions['formats'][$type]['processTo'][1];
+				$valueProcessed = $valueAux;
+
+				if ($inputFormat != $processFormat) {
+					$valueProcessed = Carbon::createFromFormat($inputFormat, $valueAux)->format($processFormat);
+				}
+
+				return trim($valueProcessed);
+			case 'integer':
+				return (int) $valueAux;
+			case 'decimal':
+				return (float) $valueAux;
+			default:
+				return trim($valueAux);
+		}
 	}
 
 	private function getFieldRaw($field)
