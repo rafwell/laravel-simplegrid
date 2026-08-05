@@ -319,8 +319,9 @@ class DefaultQueryBuilder implements QueryBuilderContract
 			$connection = $countModel->getModel()->getConnectionName();
 			$db = DB::connection($connection)->table(DB::raw("({$countModel->selectRaw('1')->toSql()}) as sub"));
 
-
-			$db->mergeBindings($this->getModelQuery($countModel));
+			// toBase() apply global scopes before get bindings; getQuery() doesen't include global scopes bindings
+			$bindingsQuery = $this->subqueryMode ? $countModel : $countModel->toBase();
+			$db->mergeBindings($bindingsQuery);
 			if ($this->emptyBecauseSearchIsRequired) {
 				$db->limit(0);
 			}
