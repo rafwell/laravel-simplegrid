@@ -9,7 +9,10 @@
         $hasHeaderActions = $headerActionsSlot instanceof \Illuminate\View\ComponentSlot
             ? $headerActionsSlot->isNotEmpty()
             : filled($headerActionsSlot);
-        $isAdvancedSearchOpen = $advancedSearch && $advancedSearchOpened === true;
+        $searchedValueIsArray = is_array($searchedValue ?? null);
+        $simpleSearchValue = is_string($searchedValue ?? null) ? $searchedValue : '';
+        $hasActiveSearch = $searchedValueIsArray ? $searchedValue !== [] : $simpleSearchValue !== '';
+        $isAdvancedSearchOpen = $advancedSearch && ($advancedSearchOpened === true || $searchedValueIsArray);
         $showSearchForm = $hasExtraSearch || $allowSearch || $isAdvancedSearchOpen || $hasHeaderActions;
     @endphp
     @if ($showSearchForm)
@@ -19,6 +22,7 @@
                 'prefix' => '',
                 'skip' => ['search'],
                 'skipArrays' => $hasExtraSearch,
+                'only' => $hasExtraSearch ? ['grid', 'order', 'direction', 'page', 'rows-per-page', 'advanced-search'] : null,
             ])
             @if ($hasExtraSearch)
                 <div class="simplegrid-extra-search">
@@ -26,7 +30,8 @@
                 </div>
             @endif
             @if ($isAdvancedSearchOpen)
-                <div class="search advanced-search {{ isset($searchedValue) && $searchedValue != '' ? 'searched' : '' }}">
+                <div class="search advanced-search {{ $hasActiveSearch ? 'searched' : '' }}">
+                    <input type="hidden" name="advanced-search" value="true">
                     @if ($hasHeaderActions)
                         <div class="simplegrid-header-actions">
                             {{ $headerActionsSlot }}
@@ -53,13 +58,13 @@
                     </fieldset>
                 </div>
             @else
-                <div class="search simple-search {{ isset($advancedSearch) && $advancedSearch ? 'with-advanced-search' : '' }} {{ isset($searchedValue) && $searchedValue != '' ? 'searched' : '' }}">
+                <div class="search simple-search {{ isset($advancedSearch) && $advancedSearch ? 'with-advanced-search' : '' }} {{ $hasActiveSearch ? 'searched' : '' }}">
                     <div class="search-main">
                         @if ($allowSearch)
                             <div class="search-controls">
-                                <input type="text" name="search" class="form-control input-search" placeholder="{{ $simpleSearchPlaceholder ?? __('Simplegrid::grid.Search by...') }}" value="{{ $searchedValue }}">
+                                <input type="text" name="search" class="form-control input-search" placeholder="{{ $simpleSearchPlaceholder ?? __('Simplegrid::grid.Search by...') }}" value="{{ $simpleSearchValue }}">
                                 <button class="btn-search btn btn-default" type="submit" title="@lang('Simplegrid::grid.Search')"><span class="fa fa-search"></span></button>
-                                @if (isset($searchedValue) && $searchedValue != '')
+                                @if ($simpleSearchValue !== '')
                                     <button class="btn-clear-search btn btn-default" type="button" title="@lang('Simplegrid::grid.Clear search')"><span class="fa fa-times"></span></button>
                                 @endif
                                 @if ($advancedSearch && $advancedSearchOpened === false)

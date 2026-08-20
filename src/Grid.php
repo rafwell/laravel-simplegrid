@@ -497,8 +497,10 @@ class Grid
 				$this->queryBuilder->setEmptyBecauseSearchIsRequired();
 			}
 
-			//advanced search
-			if ($this->Request['advanced-search']) $this->advancedSearchOpened = true;
+			// Keep the advanced search panel open when it is flagged or when search[] fields were submitted
+			if ($this->Request['advanced-search'] || is_array($this->Request->search ?? null)) {
+				$this->advancedSearchOpened = true;
+			}
 
 			//sort
 			if (isset($this->Request->order) && isset($this->Request->direction)) {

@@ -6,6 +6,20 @@ $(document).ready(function(){
         var $form = $(this).closest('form');
         $form.find('[name=search]').val('');
         $form.submit();
+    });
+
+    $(document).on('submit', '.simplegrid-search-form', function () {
+        var $form = $(this);
+        $form.find('input[type="hidden"]').each(function () {
+            var hidden = this;
+            if (!hidden.name) {
+                return;
+            }
+            var hasLiveField = $form.find('[name]').filter(function () {
+                return this !== hidden && this.name === hidden.name && this.type !== 'hidden';
+            }).length > 0;
+            hidden.disabled = hasLiveField;
+        });
     }); 
 
     $('.grid input[type="checkbox"].select-all').click(function(){
