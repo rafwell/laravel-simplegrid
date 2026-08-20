@@ -631,6 +631,8 @@ class Grid
 			'simpleGridConfig' => $this->simpleGridConfig,
 			'emptyBecauseSearchIsRequired' => $this->emptyBecauseSearchIsRequired,
 			'simpleSearchPlaceholder' => $this->simpleSearchPlaceholder,
+			'extraSearch' => '',
+			'headerActions' => '',
 		]);
 
 		return $this->view;

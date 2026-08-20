@@ -6,7 +6,42 @@
 	display: inline-block;
 	width: 100%;
 }
-.grid-container .search form{
+.grid-container .simplegrid-search-form{
+	display: block;
+	width: 100%;
+}
+.grid-container .simplegrid-extra-search{
+	margin-bottom: 15px;
+}
+.grid-container .simplegrid-extra-search:after{
+	content: ' ';
+	display: table;
+	clear: both;
+}
+.grid-container .simplegrid-header-actions{
+	flex-shrink: 0;
+}
+.grid-container .search.simple-search{
+	display: flex;
+	justify-content: space-between;
+}
+.grid-container .search.simple-search .search-main{
+	display: flex;
+}
+.grid-container .search.simple-search .search-controls,
+.grid-container .search.simple-search .total-info{
+	float: none;
+}
+.grid-container .search.advanced-search > .simplegrid-header-actions{
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 10px;
+}
+.grid-container .advanced-search .btn-submit-advanced-search{
+	margin-right: 5px;
+}
+.grid-container .search form,
+.grid-container .search .search-controls{
 	width: auto;	
 	position:relative;
 	float: left;

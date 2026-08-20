@@ -1,62 +1,99 @@
 <div class="grid-container grid" id="grid{{ $id }}">
     <span></span>
-    @if ($advancedSearch && $advancedSearchOpened === true)
-        <div class="search advanced-search {{ isset($searchedValue) && $searchedValue != '' ? 'searched' : '' }}">
-            <form action="{{ $url }}" method="get">
-                @foreach ($fieldsRequest as $field => $valor)
-                    @if ($field != 'search')
-                        <input type="hidden" name="{{ $field }}" value="{{ $valor }}">
+    @php
+        $extraSearchSlot = $extraSearch ?? null;
+        $hasExtraSearch = $extraSearchSlot instanceof \Illuminate\View\ComponentSlot
+            ? $extraSearchSlot->isNotEmpty()
+            : filled($extraSearchSlot);
+        $headerActionsSlot = $headerActions ?? null;
+        $hasHeaderActions = $headerActionsSlot instanceof \Illuminate\View\ComponentSlot
+            ? $headerActionsSlot->isNotEmpty()
+            : filled($headerActionsSlot);
+        $isAdvancedSearchOpen = $advancedSearch && $advancedSearchOpened === true;
+        $showSearchForm = $hasExtraSearch || $allowSearch || $isAdvancedSearchOpen || $hasHeaderActions;
+    @endphp
+    @if ($showSearchForm)
+        <form action="{{ $url }}" method="get" class="simplegrid-search-form" id="simplegrid-form-{{ $id }}">
+            @include('Simplegrid::hidden-fields', [
+                'fields' => $fieldsRequest,
+                'prefix' => '',
+                'skip' => ['search'],
+                'skipArrays' => $hasExtraSearch,
+            ])
+            @if ($hasExtraSearch)
+                <div class="simplegrid-extra-search">
+                    {{ $extraSearchSlot }}
+                </div>
+            @endif
+            @if ($isAdvancedSearchOpen)
+                <div class="search advanced-search {{ isset($searchedValue) && $searchedValue != '' ? 'searched' : '' }}">
+                    @if ($hasHeaderActions)
+                        <div class="simplegrid-header-actions">
+                            {{ $headerActionsSlot }}
+                        </div>
                     @endif
-                @endforeach
-                <fieldset>
-                    <legend>@lang('Simplegrid::grid.Advanced Search')</legend>
-                    @include('Simplegrid::advancedSearch', ['fields' => $advancedSearchFields])
-                    <button class="btn-submit-advanced-search btn btn-default" type="submit" title="@lang('Simplegrid::grid.Search')">
-                        <span class="fa fa-search"> </span> @lang('Simplegrid::grid.Search')
-                    </button>
-                    @if ($allowSearch)
-                        <a href="{{ $urlSimpleSearch }}" class="btn btn-default" title="@lang('Simplegrid::grid.Simple Search')"><span class="fa fa-search-minus"></span></a>
-                    @endif
-                    @if ($totalRows > 0)
-                        <span class="total-info pull-right">
-                            {{ trans_choice('Simplegrid::grid.Page :current_page of :total_pages. Total of :total_rows row.', $totalRows, [
-                                'current_page' => $currentPage,
-                                'total_pages' => $totalPages,
-                                'total_rows' => $totalRows,
-                            ]) }}
-                        </span>
-                    @endif
-                </fieldset>
-            </form>
-        </div>
-    @else
-        <div class="search simple-search {{ isset($advancedSearch) && $advancedSearch ? 'with-advanced-search' : '' }} {{ isset($searchedValue) && $searchedValue != '' ? 'searched' : '' }}">
-            @if ($allowSearch)
-                <form action="{{ $url }}" method="get">
-                    @foreach ($fieldsRequest as $field => $valor)
-                        @if ($field != 'search' && !is_array($valor) && !is_object($valor))
-                            <input type="hidden" name="{{ $field }}" value="{{ $valor }}">
+                    <fieldset>
+                        <legend>@lang('Simplegrid::grid.Advanced Search')</legend>
+                        @include('Simplegrid::advancedSearch', ['fields' => $advancedSearchFields])
+                        <button class="btn-submit-advanced-search btn btn-default" type="submit" title="@lang('Simplegrid::grid.Search')">
+                            <span class="fa fa-search"> </span> @lang('Simplegrid::grid.Search')
+                        </button>
+                        @if ($allowSearch)
+                            <a href="{{ $urlSimpleSearch }}" class="btn btn-default" title="@lang('Simplegrid::grid.Simple Search')"><span class="fa fa-search-minus"></span></a>
                         @endif
-                    @endforeach
-                    <input type="text" name="search" class="form-control input-search" placeholder="{{ $simpleSearchPlaceholder ?? __('Simplegrid::grid.Search by...') }}" value="{{ $searchedValue }}">
-                    <button class="btn-search btn btn-default" type="submit" title="@lang('Simplegrid::grid.Search')"><span class="fa fa-search"></span></button>
-                    @if (isset($searchedValue) && $searchedValue != '')
-                        <button class="btn-clear-search btn btn-default" type="button" title="@lang('Simplegrid::grid.Clear search')"><span class="fa fa-times"></span></button>
+                        @if ($totalRows > 0)
+                            <span class="total-info pull-right">
+                                {{ trans_choice('Simplegrid::grid.Page :current_page of :total_pages. Total of :total_rows row.', $totalRows, [
+                                    'current_page' => $currentPage,
+                                    'total_pages' => $totalPages,
+                                    'total_rows' => $totalRows,
+                                ]) }}
+                            </span>
+                        @endif
+                    </fieldset>
+                </div>
+            @else
+                <div class="search simple-search {{ isset($advancedSearch) && $advancedSearch ? 'with-advanced-search' : '' }} {{ isset($searchedValue) && $searchedValue != '' ? 'searched' : '' }}">
+                    <div class="search-main">
+                        @if ($allowSearch)
+                            <div class="search-controls">
+                                <input type="text" name="search" class="form-control input-search" placeholder="{{ $simpleSearchPlaceholder ?? __('Simplegrid::grid.Search by...') }}" value="{{ $searchedValue }}">
+                                <button class="btn-search btn btn-default" type="submit" title="@lang('Simplegrid::grid.Search')"><span class="fa fa-search"></span></button>
+                                @if (isset($searchedValue) && $searchedValue != '')
+                                    <button class="btn-clear-search btn btn-default" type="button" title="@lang('Simplegrid::grid.Clear search')"><span class="fa fa-times"></span></button>
+                                @endif
+                                @if ($advancedSearch && $advancedSearchOpened === false)
+                                    <a href="{{ $urlAdvancedSearch }}" class="btn-advanced-search btn btn-default" title="@lang('Simplegrid::grid.Advanced Search')"><span class="fa fa-search-plus"></span></a>
+                                @endif
+                            </div>
+                        @endif
+                        @if ($totalRows > 0)
+                            <span class="total-info">
+                                {{ trans_choice('Simplegrid::grid.Page :current_page of :total_pages. Total of :total_rows row.', $totalRows, [
+                                    'current_page' => $currentPage,
+                                    'total_pages' => $totalPages,
+                                    'total_rows' => $totalRows,
+                                ]) }}
+                            </span>
+                        @endif
+                    </div>
+                    @if ($hasHeaderActions)
+                        <div class="simplegrid-header-actions">
+                            {{ $headerActionsSlot }}
+                        </div>
                     @endif
-                    @if ($advancedSearch && $advancedSearchOpened === false)
-                        <a href="{{ $urlAdvancedSearch }}" class="btn-advanced-search btn btn-default" title="@lang('Simplegrid::grid.Advanced Search')"><span class="fa fa-search-plus"></span></a>
-                    @endif
-                </form>
+                </div>
             @endif
-            @if ($totalRows > 0)
-                <span class="total-info">
-                    {{ trans_choice('Simplegrid::grid.Page :current_page of :total_pages. Total of :total_rows row.', $totalRows, [
-                        'current_page' => $currentPage,
-                        'total_pages' => $totalPages,
-                        'total_rows' => $totalRows,
-                    ]) }}
-                </span>
-            @endif
+        </form>
+    @elseif ($totalRows > 0)
+        <div class="search">
+            <span class="total-info">
+                {{ trans_choice('Simplegrid::grid.Page :current_page of :total_pages. Total of :total_rows row.', $totalRows, [
+                    'current_page' => $currentPage,
+                    'total_pages' => $totalPages,
+                    'total_rows' => $totalRows,
+                ]) }}
+            </span>
         </div>
     @endif
 

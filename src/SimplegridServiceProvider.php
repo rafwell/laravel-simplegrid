@@ -2,7 +2,9 @@
 
 namespace Rafwell\Simplegrid;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Rafwell\Simplegrid\View\Components\GridComponent;
 
 class SimplegridServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,8 @@ class SimplegridServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'Simplegrid');
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'Simplegrid');
+
+        Blade::component('simplegrid', GridComponent::class);
 
         $this->publishes([
             __DIR__ . '/../config/rafwell-simplegrid.php' => config_path('rafwell-simplegrid.php'),
